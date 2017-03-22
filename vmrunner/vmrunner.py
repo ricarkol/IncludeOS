@@ -184,6 +184,9 @@ class qemu(hypervisor):
                 "-netdev", backend + ",id=" + if_name + ",script=" + qemu_ifup]
 
     def kvm_present(self):
+        return False
+
+        # this is not working
         command = "egrep -m 1 '^flags.*(vmx|svm)' /proc/cpuinfo"
         try:
             subprocess.check_output(command, shell = True)

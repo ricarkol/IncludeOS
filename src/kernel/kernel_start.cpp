@@ -39,6 +39,7 @@ static void enableSSE(void) noexcept
 
 extern "C"
 void kernel_start(uintptr_t magic, uintptr_t addr)  {
+  // rkj
 
   // enable SSE extensions bitmask in CR4 register
   enableSSE();
