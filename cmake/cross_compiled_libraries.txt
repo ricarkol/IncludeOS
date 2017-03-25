@@ -26,6 +26,8 @@ if (from_bundle)
 
 	set(LIBGCC_LIB_DIR ${PRECOMPILED_DIR}/libgcc/)
 
+	set(SOLO5_LIB_DIR ${PRECOMPILED_DIR}/solo5/)
+
 	add_library(libc STATIC IMPORTED)
 	set_target_properties(libc PROPERTIES IMPORTED_LOCATION ${NEWLIB_LIB_DIR}/libc.a)
 	add_dependencies(libc PrecompiledLibraries)
@@ -33,6 +35,10 @@ if (from_bundle)
 	add_library(libm STATIC IMPORTED)
 	set_target_properties(libm PROPERTIES IMPORTED_LOCATION ${NEWLIB_LIB_DIR}/libm.a)
 	add_dependencies(libm PrecompiledLibraries)
+
+	add_library(solo5 STATIC IMPORTED)
+	set_target_properties(solo5 PROPERTIES IMPORTED_LOCATION ${SOLO5_LIB_DIR}/solo5.o)
+	add_dependencies(solo5 PrecompiledLibraries)
 
 	add_library(libgcc STATIC IMPORTED)
 	set_target_properties(libgcc PROPERTIES IMPORTED_LOCATION ${LIBGCC_LIB_DIR}/libgcc.a)
@@ -89,6 +95,8 @@ install(DIRECTORY ${LIBCXX_INCLUDE_DIR} DESTINATION includeos/include/libcxx)
 
 install(DIRECTORY ${NEWLIB_INCLUDE_DIR} DESTINATION includeos/include/newlib)
 
+install(DIRECTORY ${SOLO5_INCLUDE_DIR} DESTINATION includeos/include/solo5)
+
 install(FILES ${CRTEND} ${CRTBEGIN} DESTINATION includeos/lib)
 
-install(FILES ${NEWLIB_LIB_DIR}/libc.a ${NEWLIB_LIB_DIR}/libg.a ${NEWLIB_LIB_DIR}/libm.a ${LIBGCC_LIB_DIR}/libgcc.a ${LIBCXX_LIB_DIR}/libc++.a DESTINATION includeos/lib)
+install(FILES ${NEWLIB_LIB_DIR}/libc.a ${NEWLIB_LIB_DIR}/libg.a ${NEWLIB_LIB_DIR}/libm.a ${LIBGCC_LIB_DIR}/libgcc.a ${LIBCXX_LIB_DIR}/libc++.a ${SOLO5_LIB_DIR}/solo5.o  DESTINATION includeos/lib)

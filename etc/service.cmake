@@ -212,6 +212,10 @@ add_library(libgcc STATIC IMPORTED)
 set_target_properties(libgcc PROPERTIES LINKER_LANGUAGE C)
 set_target_properties(libgcc PROPERTIES IMPORTED_LOCATION $ENV{INCLUDEOS_PREFIX}/includeos/lib/libgcc.a)
 
+add_library(solo5 STATIC IMPORTED)
+set_target_properties(solo5 PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(solo5 PROPERTIES IMPORTED_LOCATION $ENV{INCLUDEOS_PREFIX}/includeos/lib/solo5.o)
+
 # add memdisk
 function(add_memdisk DISK)
   get_filename_component(DISK_RELPATH "${DISK}"
@@ -288,6 +292,7 @@ target_link_libraries(service
     libm
     libg
     libgcc
+    solo5
     $ENV{INCLUDEOS_PREFIX}/includeos/lib/crtend.o
     --whole-archive crtn --no-whole-archive
     )

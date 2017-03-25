@@ -58,6 +58,9 @@ void kernel_start(uintptr_t magic, uintptr_t addr)  {
   // Initialize stack-unwinder, call global constructors etc.
   _init_c_runtime();
 
+  if (1)
+  for (;;);
+
   // Initialize OS including devices
   OS::start(magic, addr);
   
