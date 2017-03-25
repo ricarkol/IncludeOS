@@ -26,6 +26,7 @@ if (from_bundle)
 
 	set(LIBGCC_LIB_DIR ${PRECOMPILED_DIR}/libgcc/)
 
+	set(SOLO5_INCLUDE_DIR ${PRECOMPILED_DIR}/solo5/include/)
 	set(SOLO5_LIB_DIR ${PRECOMPILED_DIR}/solo5/)
 
 	add_library(libc STATIC IMPORTED)

@@ -36,6 +36,7 @@
 #include <kprint>
 #include <statman>
 #include <vector>
+#include <solo5.h>
 
 extern "C" void kernel_sanity_checks();
 //#define ENABLE_PROFILERS
@@ -86,11 +87,16 @@ const std::string& OS::cmdline_args() noexcept
   return os_cmdline;
 }
 
+
 void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp1{};
 #endif
+
+  solo5_console_write("bla\n", 4);
+
+  for (;;);
 
   default_stdout_handlers();
 
@@ -342,6 +348,7 @@ void OS::halt() {
 }
 
 void OS::event_loop() {
+  for (;;);
   FILLINE('=');
   printf(" IncludeOS %s\n", version().c_str());
   printf(" +--> Running [ %s ]\n", Service::name().c_str());

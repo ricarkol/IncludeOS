@@ -26,6 +26,7 @@
 
 /* Solo5 public APIs */
 
+extern "C" {
 /* Application entry point */
 int solo5_app_main(char *cmdline);
 
@@ -64,5 +65,5 @@ uint64_t solo5_clock_wall(void);
  * TODO: Extend this interface to select which I/O events are of interest.
  */
 int solo5_poll(uint64_t until_nsecs);
-
+}
 #endif
