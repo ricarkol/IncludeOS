@@ -96,8 +96,6 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 
   solo5_console_write("bla\n", 4);
 
-  for (;;);
-
   default_stdout_handlers();
 
   // Print a fancy header
@@ -114,14 +112,18 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 
 
   // Detect memory limits etc. depending on boot type
-  if (boot_magic == MULTIBOOT_BOOTLOADER_MAGIC) {
-    OS::multiboot(boot_magic, boot_addr);
+  if (1 /* ukvm */) {
+    
   } else {
+    if (boot_magic == MULTIBOOT_BOOTLOADER_MAGIC) {
+      OS::multiboot(boot_magic, boot_addr);
+    } else {
 
-    if (is_softreset_magic(boot_magic) && boot_addr != 0)
-        OS::resume_softreset(boot_addr);
+      if (is_softreset_magic(boot_magic) && boot_addr != 0)
+          OS::resume_softreset(boot_addr);
 
-    OS::legacy_boot();
+      OS::legacy_boot();
+    }
   }
 
   Expects(high_memory_size_);
@@ -389,7 +391,8 @@ void OS::add_stdout_default_serial()
 {
   add_stdout(
   [] (const char* str, const size_t len) {
-    kprintf("%.*s", len, str);
+    //kprintf("%.*s", len, str);
+    solo5_console_write(str, len);
   });
 }
 __attribute__ ((weak))
