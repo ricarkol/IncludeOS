@@ -116,7 +116,7 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
     multiboot_info_t bootinfo;
     bootinfo.flags = MULTIBOOT_INFO_MEMORY;
     bootinfo.mem_lower = 639; // copied from a regular includeos run
-    bootinfo.mem_upper = 524288 - 1; // ukvm mem_size to kb
+    bootinfo.mem_upper = 524288 - (0xeffff / 1024); // ukvm mem_size to kb
     OS::multiboot(boot_magic, (uint32_t) &bootinfo);
   } else {
     if (boot_magic == MULTIBOOT_BOOTLOADER_MAGIC) {
@@ -206,7 +206,7 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   //PCI_manager::init();
 
   // Print registered devices
-  //hw::Devices::print_devices();
+  hw::Devices::print_devices();
 
   INFO("ukvm", "after print_devices\n");
 

@@ -53,6 +53,7 @@ namespace hw
     /** The size of the disk in whole sectors */
     virtual block_t size() const noexcept = 0;
 
+
     /** Returns the optimal block size for this device */
     virtual block_t block_size() const noexcept = 0;
 

@@ -18,12 +18,51 @@
 #include <service>
 #include <cstdio>
 #include <solo5.h>
+#include <memdisk>
+
+#include <os>
+#include <stdio.h>
+#include <cassert>
+
 
 #define SECTOR_SIZE     512
 
 /* Space for 2 sectors for edge-case tests */
 static uint8_t wbuf[SECTOR_SIZE * 2];
 static uint8_t rbuf[SECTOR_SIZE * 2];
+
+void memdisk_test()
+{
+  INFO("MemDisk", "Running tests for MemDisk");
+  auto disk = fs::new_shared_memdisk();
+  CHECKSERT(disk, "Created shared memdisk");
+
+  printf("name %s %llu\n", disk->name().c_str(), disk->dev().size());
+
+  CHECKSERT(not disk->empty(), "Disk is not empty");
+  // verify that the size is indeed 2 sectors
+  CHECKSERT(disk->dev().size() == 2, "Disk size is correct (2 sectors)");
+
+  // read one block
+  auto buf = disk->dev().read_sync(0);
+  // verify nothing bad happened
+  CHECKSERT(!!(buf), "Buffer for sector 0 is valid");
+
+  // convert to text
+  std::string text((const char*) buf.get(), disk->dev().block_size());
+  // verify that the sector contents matches the test string
+  // NOTE: the 3 first characters are non-text 0xBFBBEF
+  std::string test1 = "The Project Gutenberg EBook of Pride and Prejudice, by Jane Austen";
+  std::string test2 = text.substr(0, test1.size());
+  CHECKSERT(test1 == test2, "Binary comparison of sector data");
+
+  // verify that reading outside of disk returns a 0x0 pointer
+  //buf = disk->dev().read_sync(disk->dev().size());
+  //CHECKSERT(!buf, "Buffer outside of disk range (sector=%llu) is 0x0",
+  //      disk->dev().size());
+
+  INFO("MemDisk", "SUCCESS");
+}
 
 int check_sector_write(uint64_t sector)
 {
@@ -59,6 +98,8 @@ void Service::start(const std::string& args)
     int rlen;
     printf("Hello world - OS included!\n");
     printf("Args = %s\n", args.c_str());
+
+    memdisk_test();
 
     /*
      * Write and read/check one tenth of the disk.

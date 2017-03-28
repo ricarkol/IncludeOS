@@ -36,7 +36,7 @@ set(SOURCES
 # set(LOCAL_INCLUDES ".")
 
 # Adding memdisk (expects my.disk to exist in current dir):
-# set(MEMDISK ${CMAKE_SOURCE_DIR}/my.disk)
+#set(MEMDISK ${CMAKE_SOURCE_DIR}/sector2.disk)
 
 # DRIVERS / PLUGINS:
 
@@ -57,6 +57,9 @@ set(LIBRARIES
   # path to full library
   )
 
-
 # include service build script
 include($ENV{INCLUDEOS_PREFIX}/includeos/service.cmake)
+
+
+add_memdisk(build/sector2.disk)
+
