@@ -37,6 +37,7 @@ static void enableSSE(void) noexcept
   asm ("mov %eax, %cr4");
 }
 
+
 extern "C"
 void kernel_start(uintptr_t magic, uintptr_t addr)  {
   // rkj

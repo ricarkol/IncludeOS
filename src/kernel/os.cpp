@@ -363,6 +363,11 @@ void OS::halt() {
 }
 
 void OS::event_loop() {
+
+  // test rkj ukvm
+  Cylinder foo (10,20);
+  std::cout << "foo's volume: " << foo.volume() << '\n';
+
   FILLINE('=');
   printf(" IncludeOS %s\n", version().c_str());
   printf(" +--> Running [ %s ]\n", Service::name().c_str());
@@ -370,7 +375,7 @@ void OS::event_loop() {
 
   while (power_) {
     IRQ_manager::get().process_interrupts();
-    debug2("OS going to sleep.\n");
+    printf("OS going to sleep.\n");
     OS::halt();
   }
 
