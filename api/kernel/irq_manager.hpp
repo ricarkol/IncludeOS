@@ -174,7 +174,7 @@ class Circle {
     double radius;
   public:
     Circle(double r) : radius(r) { }
-    double area() {return radius*radius*3.14159265;}
+    double area() {return radius;}
 };
 
 class Cylinder {
@@ -185,5 +185,37 @@ class Cylinder {
     double volume();
 };
 
+
+using namespace std;
+class Vehicle
+{
+ public:
+  virtual void ApplyBreak()
+  {
+     cout<<"Vehicle Break"<<endl;
+  }
+  virtual void ApplyHorn()
+  {
+    cout<<"Vehicle Horns"<<endl;
+  }
+};
+
+class Truck: public Vehicle
+{
+ public:
+  void ApplyBreak()
+  {
+    cout<<"Truck Break"<<endl;
+  }
+};
+
+class Car:public Vehicle
+{
+ public:
+  void ApplyHorn()
+  {
+    cout<<"Car Horns"<<endl;
+  }
+};
 
 #endif //< KERNEL_IRQ_MANAGER_HPP
