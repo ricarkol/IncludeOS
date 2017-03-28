@@ -113,7 +113,11 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 
   // Detect memory limits etc. depending on boot type
   if (1 /* ukvm */) {
-    
+    multiboot_info_t bootinfo;
+    bootinfo.flags = MULTIBOOT_INFO_MEMORY;
+    bootinfo.mem_lower = 639; // copied from a regular includeos run
+    bootinfo.mem_upper = 524288 - 1; // ukvm mem_size to kb
+    OS::multiboot(boot_magic, (uint32_t) &bootinfo);
   } else {
     if (boot_magic == MULTIBOOT_BOOTLOADER_MAGIC) {
       OS::multiboot(boot_magic, boot_addr);
@@ -164,38 +168,47 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   ScopedProfiler sp2("OS::start IRQ manager init");
 #endif
   // Set up interrupt and exception handlers
-  IRQ_manager::init();
+  //IRQ_manager::init();
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp3("OS::start ACPI init");
 #endif
   // read ACPI tables
-  hw::ACPI::init();
+  // ukvm
+  //hw::ACPI::init();
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp4("OS::start APIC init");
 #endif
   // setup APIC, APIC timer, SMP etc.
-  hw::APIC::init();
+  // ukvm
+  //hw::APIC::init();
 
   // enable interrupts
   INFO("BSP", "Enabling interrupts");
-  IRQ_manager::enable_interrupts();
+  INFO("BSP", "before enable interrupts\n");
+  //IRQ_manager::enable_interrupts();
+  INFO("BSP", "after enable interrupts\n");
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp5("OS::start PIT init");
 #endif
   // Initialize the Interval Timer
-  hw::PIT::init();
+  // ukvm
+  //hw::PIT::init();
+
+  INFO("BSP", "after pit init\n");
 
 #ifdef ENABLE_PROFILERS
-  ScopedProfiler sp6("OS::start PCI manager init");
+  //ScopedProfiler sp6("OS::start PCI manager init");
 #endif
   // Initialize PCI devices
-  PCI_manager::init();
+  //PCI_manager::init();
 
   // Print registered devices
-  hw::Devices::print_devices();
+  //hw::Devices::print_devices();
+
+  INFO("ukvm", "after print_devices\n");
 
   // sleep statistics
   // NOTE: needs to be positioned before anything that calls OS::halt
@@ -215,41 +228,41 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   ScopedProfiler sp7("OS::start CPU frequency");
 #endif
   // TODO: Debug why actual measurments sometimes causes problems. Issue #246.
-  if (OS::cpu_mhz_.count() < 0) {
-    OS::cpu_mhz_ = MHz(hw::PIT::estimate_CPU_frequency(16));
-  }
-  INFO2("+--> %f MHz", cpu_freq().count());
+  //if (OS::cpu_mhz_.count() < 0) {
+  //  OS::cpu_mhz_ = MHz(hw::PIT::estimate_CPU_frequency(16));
+  //}
+  //INFO2("+--> %f MHz", cpu_freq().count());
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp8("OS::start Timers init");
 #endif
   // cpu_mhz must be known before we can start timer system
   /// initialize timers hooked up to APIC timer
-  Timers::init(
+  //Timers::init(
     // timer start function
-    hw::APIC_Timer::oneshot,
+    //hw::APIC_Timer::oneshot,
     // timer stop function
-    hw::APIC_Timer::stop);
+    //hw::APIC_Timer::stop);
 
   // initialize BSP APIC timer
-  hw::APIC_Timer::init(
-  [] {
+  //hw::APIC_Timer::init(
+  //[] {
     // set final interrupt handler
-    hw::APIC_Timer::set_handler(Timers::timers_handler);
+  //  hw::APIC_Timer::set_handler(Timers::timers_handler);
     // signal that kernel is done with everything
-    Service::ready();
+  //  Service::ready();
     // signal ready
     // NOTE: this executes the first timers, so we
     // don't want to run this before calling Service ready
-    Timers::ready();
-  });
+  //  Timers::ready();
+  //});
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp9("OS::start RTC init");
 #endif
   // Realtime/monotonic clock
-  RTC::init();
-  booted_at_ = RTC::now();
+  //RTC::init();
+  //booted_at_ = RTC::now();
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp10("OS::start Plugins init");
@@ -350,7 +363,6 @@ void OS::halt() {
 }
 
 void OS::event_loop() {
-  for (;;);
   FILLINE('=');
   printf(" IncludeOS %s\n", version().c_str());
   printf(" +--> Running [ %s ]\n", Service::name().c_str());

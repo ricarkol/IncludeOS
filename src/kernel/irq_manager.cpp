@@ -77,7 +77,9 @@ void cpu_exception(uint32_t eip, uint32_t error)
 
 
 void IRQ_manager::enable_interrupts() {
+  kprintf("about to sti\n");
   asm volatile("sti");
+  kprintf("after sti\n");
 }
 
 void IRQ_manager::init()
