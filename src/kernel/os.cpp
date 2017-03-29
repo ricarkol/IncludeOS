@@ -28,6 +28,7 @@
 #include <hw/cmos.hpp>
 #include <kernel/irq_manager.hpp>
 #include <kernel/pci_manager.hpp>
+#include <kernel/solo5_manager.hpp>
 #include <kernel/timers.hpp>
 #include <kernel/rtc.hpp>
 #include <kernel/rdrand.hpp>
@@ -204,6 +205,7 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 #endif
   // Initialize PCI devices
   //PCI_manager::init();
+  Solo5_manager::init();
 
   // Print registered devices
   hw::Devices::print_devices();

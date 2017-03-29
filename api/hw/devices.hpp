@@ -26,6 +26,7 @@
 #include "block_device.hpp"
 
 class PCI_manager; // for friending
+class Solo5_manager; // for friending
 
 namespace hw {
 
@@ -134,6 +135,7 @@ namespace hw {
 
     /** Following classes are allowed to register a device */
     friend class ::PCI_manager;
+    friend class ::Solo5_manager;
 
   }; //< class Devices
 
