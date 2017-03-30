@@ -113,7 +113,7 @@ template <typename Device_type>
 inline bool Solo5_manager::register_device(hw::PCI_Device& dev) {
   try
   {
-    debug("sz=%u, mod: 0x%x prod: 0x%x, id: 0x%x\n",
+    INFO2("sz=%u, mod: 0x%x prod: 0x%x, id: 0x%x\n",
       drivers<Device_type>().size(), dev.vendor_id(), dev.product_id(),
       get_driver_id(dev));
 

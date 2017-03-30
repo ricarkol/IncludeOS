@@ -127,6 +127,7 @@ struct msix_t;
       VENDOR_VIRTIO  = 0x1AF4,
       VENDOR_REALTEK = 0x10EC,
       VENDOR_VMWARE  = 0x15AD,
+      VENDOR_SOLO5   = 0xCACA,
     };
 
     /**

@@ -30,6 +30,21 @@ Solo5_manager::Device_registry Solo5_manager::devices_;
 void Solo5_manager::init() {
   INFO("Solo5 Manager", "Looking for solo5 devices");
 
+  uint32_t id_solo5 {PCI::WTF};
+
+  id_solo5 = 0x10011AF4; // virtio and product virtioblk
+
+  hw::PCI_Device dev {0xffff, id_solo5};
+  printf("vendor=%x product=%x\n", dev.vendor_id(), dev.product_id());
+
+  // store device
+  devices_[dev.classcode()].emplace_back(dev);
+
+  bool registered = true;
+
+  //register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_VIRTIO, 0x1001, &VirtioBlk::new_instance);
+  registered = register_device<hw::Block_device>(dev);
+
   return;
 
   /*

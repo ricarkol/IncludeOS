@@ -37,6 +37,7 @@ VirtioBlk::VirtioBlk(hw::PCI_Device& d)
   : Virtio(d), hw::Block_device(), req(queue_size(0), 0, iobase()), inflight(0)
 {
   INFO("VirtioBlk", "Block_devicer initializing");
+  return;
   {
     auto& reqs = Statman::get().create(
       Stat::UINT32, device_name() + ".requests");
@@ -302,10 +303,11 @@ void VirtioBlk::deactivate()
 }
 
 #include <kernel/pci_manager.hpp>
+#include <kernel/solo5_manager.hpp>
 
 /** Global constructor - register VirtioBlk's driver factory at the PCI_manager */
 struct Autoreg_virtioblk {
   Autoreg_virtioblk() {
-    PCI_manager::register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_VIRTIO, 0x1001, &VirtioBlk::new_instance);
+    Solo5_manager::register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_VIRTIO, 0x1001, &VirtioBlk::new_instance);
   }
 } autoreg_virtioblk;
