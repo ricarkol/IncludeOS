@@ -9,43 +9,33 @@
 
 #include <statman>
 
+#include <solo5.h>
+
 Solo5Blk::Solo5Blk(hw::PCI_Device& d)
   : hw::Block_device()
 {
   INFO("Solo5Blk", "Block_devicer initializing");
 
-/*
-  // Hook up IRQ handler (inherited from Virtio)
-  if (is_msix())
-  {
-    // update IRQ subscriptions
-    IRQ_manager::get().subscribe(irq() + 0, {this, &Solo5Blk::service_RX});
-    IRQ_manager::get().subscribe(irq() + 1, {this, &Solo5Blk::msix_conf_handler});
-  }
-  else
-  {
-    auto del(delegate<void()>{this, &Solo5Blk::irq_handler});
-    IRQ_manager::get().subscribe(irq(), del);
-  }
-*/
-
   // Done
   INFO("Solo5Blk", "Block device with %llu sectors capacity", 12345);
 }
 
-
 Solo5Blk::block_t Solo5Blk::size() const noexcept {
-  return 4000000000 / 512;
+  return solo5_blk_sectors();
 }
 
 Solo5Blk::buffer_t Solo5Blk::read_sync(block_t blk) {
-  INFO("Solo5Blk", "%s\n", __FUNCTION__);
-  return buffer_t{};
+  auto buffer = new uint8_t[block_size()];
+  int rlen = 512;
+  solo5_blk_read_sync((uint64_t) blk, buffer, &rlen);
+  return buffer_t{buffer, std::default_delete<uint8_t[]>()};
 }
 
 Solo5Blk::buffer_t Solo5Blk::read_sync(block_t blk, size_t count) {
-  INFO("Solo5Blk 2", "%s\n", __FUNCTION__);
-  return buffer_t{};
+  auto buffer = new uint8_t[block_size() * count];
+  int rlen = 512 * count;
+  solo5_blk_read_sync((uint64_t) blk, buffer, &rlen);
+  return buffer_t{buffer, std::default_delete<uint8_t[]>()};
 }
 
 
