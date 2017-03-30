@@ -64,6 +64,7 @@ public:
   static void register_driver(uint16_t vendor, uint16_t product,
     Driver_factory<Device_type> driver_factory)
   {
+    INFO("Solo5 Manager", "register driver");
     drivers<Device_type>().emplace(get_driver_id(vendor, product), driver_factory);
   }
 

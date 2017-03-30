@@ -20,6 +20,7 @@
 #include <common>
 
 #include <kernel/solo5_manager.hpp>
+#include "../drivers/solo5blk.hpp"
 #include <hw/devices.hpp>
 #include <stdexcept>
 
@@ -33,7 +34,7 @@ void Solo5_manager::init() {
   uint32_t id_solo5 {PCI::WTF};
 
   //id_solo5 = 0x10011AF4; // virtio and product virtioblk
-  id_solo5 = 0x1001CACA; // virtio and product virtioblk
+  id_solo5 = 0x1001CACA; // solo5 and product solo5blk
 
   hw::PCI_Device dev {0xffff, id_solo5};
   printf("vendor=%x product=%x\n", dev.vendor_id(), dev.product_id());
@@ -43,7 +44,7 @@ void Solo5_manager::init() {
 
   bool registered = true;
 
-  //register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_VIRTIO, 0x1001, &VirtioBlk::new_instance);
+  register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_SOLO5, 0x1001, &Solo5Blk::new_instance);
   registered = register_device<hw::Block_device>(dev);
 
   return;
