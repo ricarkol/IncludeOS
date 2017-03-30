@@ -32,7 +32,8 @@ void Solo5_manager::init() {
 
   uint32_t id_solo5 {PCI::WTF};
 
-  id_solo5 = 0x10011AF4; // virtio and product virtioblk
+  //id_solo5 = 0x10011AF4; // virtio and product virtioblk
+  id_solo5 = 0x1001CACA; // virtio and product virtioblk
 
   hw::PCI_Device dev {0xffff, id_solo5};
   printf("vendor=%x product=%x\n", dev.vendor_id(), dev.product_id());
