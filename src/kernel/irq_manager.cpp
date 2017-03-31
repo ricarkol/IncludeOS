@@ -38,8 +38,6 @@ void IRQ_manager::register_irq(uint8_t vector)
   irq_pend.atomic_set(vector);
 }
 
-double Cylinder::volume() {return base.area() * height;}
-
 extern "C" {
   extern void unused_interrupt_handler();
   extern void modern_interrupt_handler();

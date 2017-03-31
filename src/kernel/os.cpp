@@ -366,27 +366,6 @@ void OS::halt() {
 
 void OS::event_loop() {
 
-  // test rkj ukvm
-  Cylinder foo (10,20);
-  std::cout << "foo's volume: " << foo.volume() << '\n';
-
-{
-  Vehicle *v = new Vehicle();
-  v->ApplyBreak(); //Calls vehicle ApplyBreak
-  v->ApplyHorn(); //Calls vehicle ApplyHorn
-}
-
-{
-  Vehicle *v = new Truck();
-  v->ApplyBreak(); //calls Truck ApplyBreak
-  v->ApplyHorn(); //calls Vehicle ApplyHorn
-}
-
-{
-  Vehicle *v = new Car();
-  v->ApplyBreak(); //calls Vehicle ApplyBreak
-  v->ApplyHorn(); //calls Car ApplyHorn
-}
   FILLINE('=');
   printf(" IncludeOS %s\n", version().c_str());
   printf(" +--> Running [ %s ]\n", Service::name().c_str());
