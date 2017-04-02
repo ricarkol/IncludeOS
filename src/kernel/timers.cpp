@@ -72,7 +72,7 @@ void Timers::init(const start_func_t& start, const stop_func_t& stop)
 
 void Timers::ready()
 {
-  printf("timers ready\n");
+  //printf("timers ready\n");
   assert(signal_ready == false);
   signal_ready = true;
   // begin processing timers if any are queued
@@ -89,11 +89,11 @@ id_t Timers::periodic(duration_t when, duration_t period, handler_t handler)
 
     if (LIKELY(dead_timers)) {
       // look for dead timer
-      printf("look for dead timer\n");
+      //printf("look for dead timer\n");
       auto it = scheduled.begin();
       while (it != scheduled.end()) {
         // take over this timer, if dead
-        printf("take over this timer, if dead\n");
+        //printf("take over this timer, if dead\n");
         id_t id = it->second;
 
         if (timers[id].deferred_destruct) {
@@ -103,7 +103,7 @@ id_t Timers::periodic(duration_t when, duration_t period, handler_t handler)
           // reset timer
           timers[id].reset();
           // reuse timer
-          printf("reuse timer\n");
+          //printf("reuse timer\n");
           new (&timers[id]) Timer(period, handler);
           sched_timer(when, id);
 
@@ -120,21 +120,21 @@ id_t Timers::periodic(duration_t when, duration_t period, handler_t handler)
     }
     id = timers.size();
     // occupy new slot
-    printf("occupy new slot\n");
+    //printf("occupy new slot\n");
     timers.emplace_back(period, handler);
   }
   else {
-    printf("get free timer slot\n");
+    //printf("get free timer slot\n");
     // get free timer slot
     id = free_timers.back();
     free_timers.pop_back();
 
-    printf("occupy free slot\n");
+    //printf("occupy free slot\n");
     // occupy free slot
     new (&timers[id]) Timer(period, handler);
   }
 
-  printf("about to sched timer\n");
+  //printf("about to sched timer\n");
   // immediately schedule timer
   sched_timer(when, id);
 
@@ -190,28 +190,28 @@ void Timers::timers_handler()
     id_t id   = it->second;
 
     // remove dead timers
-    printf("remove dead timers\n");
+    //printf("remove dead timers\n");
     if (timers[id].deferred_destruct) {
       dead_timers--;
       // remove from schedule
       scheduled.erase(it);
       // delete timer
-      printf("delete timer\n");
+      //printf("delete timer\n");
       timers[id].reset();
       free_timers.push_back(id);
     }
     else
     {
       auto ts_now = now();
-      printf("now=%llu when=%llu diff=%ll\n", ts_now, when, ts_now-when);
+      //printf("now=%llu when=%llu diff=%ll\n", ts_now, when, ts_now-when);
 
       if (ts_now >= when) {
         // erase immediately
-        printf("erase immediately\n");
+        //printf("erase immediately\n");
         scheduled.erase(it);
 
         // call the users callback function
-        printf("call the users callback function\n");
+        //printf("call the users callback function\n");
         timers[id].callback(id);
         // if the timers struct was modified in callback, eg. due to
         // creating a timer, then the timer reference below would have
@@ -221,7 +221,7 @@ void Timers::timers_handler()
         // oneshot timers are automatically freed
         if (timer.deferred_destruct || timer.is_oneshot())
         {
-          printf("freeing one shot timer\n");
+          //printf("freeing one shot timer\n");
           timer.reset();
           if (timer.deferred_destruct) dead_timers--;
           free_timers.push_back(id);
@@ -229,7 +229,7 @@ void Timers::timers_handler()
         else if (timer.is_oneshot() == false)
         {
           // if the timer is recurring, we will simply reschedule it
-          printf("if the timer is recurring, we will simply reschedule it\n");
+          //printf("if the timer is recurring, we will simply reschedule it\n");
           // NOTE: we are carefully using (when + period) to avoid drift
           scheduled.emplace(std::piecewise_construct,
                     std::forward_as_tuple(when + timer.period),
@@ -238,7 +238,7 @@ void Timers::timers_handler()
 
       } else {
         // not yet time, so schedule it for later
-        printf("not yet time, so schedule it for later\n");
+        //printf("not yet time, so schedule it for later\n");
         is_running = true;
         arch_start_func(when - ts_now);
         // exit early, because we have nothing more to do,

@@ -35,9 +35,7 @@ void sleep(int i){
       });
 
   while (timer) {
-    INFO("Block", "blocking...");
     OS::block();
-    INFO("Block", "Done");
     Expects(os_get_blocking_level() == 0);
   }
 

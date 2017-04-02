@@ -63,7 +63,6 @@ void OS::block(){
     *highest_blocking_level = *blocking_level;
 
   if (1 /* ukvm */) {
-    //solo5_poll(solo5_clock_monotonic() + 1000000000ULL); // now + 50,000 ms
     solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
   } else {
     OS::halt();
