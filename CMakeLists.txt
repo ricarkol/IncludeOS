@@ -130,6 +130,7 @@ if(tests)
     SOURCE_DIR ${INCLUDEOS_ROOT}/test
     CMAKE_ARGS -DINCLUDEOS_ROOT=${INCLUDEOS_ROOT} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     )
+  install(DIRECTORY test/lest/include DESTINATION includeos/include)
   #add_subdirectory(test)
 endif(tests)
 
