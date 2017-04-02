@@ -25,6 +25,9 @@ void sleep(int i){
   static Timers::id_t timer{};
 
   if (not timer)
+
+    INFO("Block", "set a %d timer", i);
+
     timer = Timers::oneshot(std::chrono::seconds(i), [](auto){
         INFO("Timer", "Ticked");
         timer = 0;
@@ -32,24 +35,30 @@ void sleep(int i){
       });
 
   while (timer) {
+    INFO("Block", "blocking...");
     OS::block();
+    INFO("Block", "Done");
     Expects(os_get_blocking_level() == 0);
   }
 
   INFO("Test", " Done");
 }
 
-
 void Service::start(const std::string&)
 {
+
   INFO("Block", "Testing blocking calls.");
 
   static int sleeps = 0;
+
+  INFO("Block", "set a 5 timer");
 
   Timers::oneshot(std::chrono::seconds(5), [](auto){
       INFO("Test","About half way done (%i / 10)", sleeps);
       Expects(sleeps < 10);
     });
+
+  INFO("Block", "set a 15 timer");
 
   Timers::oneshot(std::chrono::seconds(15), [](auto){
       Expects(sleeps >= 10);

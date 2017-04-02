@@ -35,6 +35,7 @@ uint8_t IRQ_manager::get_next_msix_irq()
 
 void IRQ_manager::register_irq(uint8_t vector)
 {
+  INFO("INTR", "setting irq_pend %d\n", vector);
   irq_pend.atomic_set(vector);
 }
 
@@ -204,6 +205,7 @@ void IRQ_manager::subscribe(uint8_t irq, irq_delegate del) {
   set_irq_handler(irq, modern_interrupt_handler);
 
   // Mark IRQ as subscribed to
+  INFO("INTR", "subscribing to irq_subs %d\n", irq);
   irq_subs.set(irq);
 
   // Stats
@@ -213,7 +215,9 @@ void IRQ_manager::subscribe(uint8_t irq, irq_delegate del) {
   // Add callback to subscriber list (for now overwriting any previous)
   irq_delegates_[irq] = del;
 
-  (*current_eoi_mechanism)();
+  // rkj comment in again
+  //(*current_eoi_mechanism)();
+
   //INFO("IRQ manager", "IRQ subscribed: %u", irq);
 }
 
@@ -223,9 +227,12 @@ void IRQ_manager::process_interrupts()
   {
     // Get the IRQ's that are both pending and subscribed to
     irq_todo.set_from_and(irq_subs, irq_pend);
+    INFO("INTR", "just got irq_todo");
 
     int intr = irq_todo.first_set();
     if (intr == -1) break;
+
+    INFO("INTR", "calling the delegates");
 
     do {
       // reset pending before running handler

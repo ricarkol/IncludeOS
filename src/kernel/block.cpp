@@ -18,6 +18,8 @@
 #include <os>
 #include <statman>
 #include <kernel/irq_manager.hpp>
+#include <kernel/timers.hpp>
+#include <solo5.h>
 
 // Keep track of blocking levels
 static uint32_t* blocking_level = 0;
@@ -60,11 +62,16 @@ void OS::block(){
   if (*blocking_level > *highest_blocking_level)
     *highest_blocking_level = *blocking_level;
 
-  // Await next interrupt
-  OS::halt();
+  if (1 /* ukvm */) {
+    //solo5_poll(solo5_clock_monotonic() + 1000000000ULL); // now + 50,000 ms
+    solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+  } else {
+    OS::halt();
+  }
 
   // Process callbacks
-  IRQ_manager::get().process_interrupts();
+  //IRQ_manager::get().process_interrupts();
+  Timers::timers_handler();
 
   // Decrement level
   *blocking_level -= 1;

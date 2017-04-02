@@ -169,7 +169,7 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   ScopedProfiler sp2("OS::start IRQ manager init");
 #endif
   // Set up interrupt and exception handlers
-  //IRQ_manager::init();
+  IRQ_manager::init();
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp3("OS::start ACPI init");
@@ -240,11 +240,16 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 #endif
   // cpu_mhz must be known before we can start timer system
   /// initialize timers hooked up to APIC timer
-  //Timers::init(
+  Timers::init(
     // timer start function
-    //hw::APIC_Timer::oneshot,
+    hw::APIC_Timer::oneshot,
     // timer stop function
-    //hw::APIC_Timer::stop);
+    hw::APIC_Timer::stop);
+
+  Service::ready();
+  Timers::ready();
+
+  //hw::APIC_Timer::set_handler(Timers::timers_handler);
 
   // initialize BSP APIC timer
   //hw::APIC_Timer::init(
@@ -372,9 +377,11 @@ void OS::event_loop() {
   FILLINE('~');
 
   while (power_) {
-    IRQ_manager::get().process_interrupts();
+    Timers::timers_handler();
+    //IRQ_manager::get().process_interrupts();
     printf("OS going to sleep.\n");
-    OS::halt();
+    //OS::halt();
+    solo5_poll(solo5_clock_monotonic() + 1000000ULL); // now + 1 ms
   }
 
   // Cleanup
