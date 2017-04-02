@@ -242,9 +242,11 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   /// initialize timers hooked up to APIC timer
   Timers::init(
     // timer start function
-    hw::APIC_Timer::oneshot,
+    //hw::APIC_Timer::oneshot,
+    [] (std::chrono::microseconds) {},
     // timer stop function
-    hw::APIC_Timer::stop);
+    //hw::APIC_Timer::stop);
+    [] () {});
 
   Service::ready();
   Timers::ready();
