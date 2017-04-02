@@ -25,6 +25,7 @@
 #include <cstdio>
 
 extern "C" {
+#include <solo5.h>
 #else
 #include <string.h>
 #include <stdarg.h>
@@ -44,11 +45,13 @@ inline void kprintf(const char* format, ...)
   va_list aptr;
   va_start(aptr, format);
   vsnprintf(buf, sizeof(buf), format, aptr);
-  __serial_print1(buf);
+  //__serial_print1(buf);
+  solo5_console_write(buf, strlen(buf));
   va_end(aptr);
 }
 
-#define kprint(cstr) __serial_print1(cstr)
+//#define kprint(cstr) __serial_print1(cstr)
+#define kprint(cstr) solo5_console_write(cstr, strlen(cstr))
 
 #ifdef __cplusplus
 }
