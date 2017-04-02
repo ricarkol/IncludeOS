@@ -381,7 +381,7 @@ void OS::event_loop() {
     //IRQ_manager::get().process_interrupts();
     //printf("OS going to sleep.\n");
     //OS::halt();
-    solo5_poll(solo5_clock_monotonic() + 1000000ULL); // now + 1 ms
+    solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
   }
 
   // Cleanup
