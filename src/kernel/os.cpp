@@ -371,8 +371,6 @@ void OS::halt() {
   *os_cycles_hlt += cycles_since_boot() - *os_cycles_total;
 }
 
-static uint8_t buf[1526];
-
 void OS::event_loop() {
 
   FILLINE('=');
@@ -388,17 +386,22 @@ void OS::event_loop() {
     //OS::halt();
     rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
     if (rc != 0) {
-      int len = sizeof(buf);
+      //uint8_t buf[1526];
+      int len = 1580;
+
+      // arbitrarily big buffer
+      uint8_t* data = new uint8_t[1580]; // free me
+
       //auto pckt_ptr = recv_packet(res.data(), res.size());
       //Link::receive(std::move(pckt_ptr));
       //solo5_net_write_sync(buf, pckt->size());
-      solo5_net_read_sync(buf, &len);
+      solo5_net_read_sync(data + sizeof(net::Packet), &len);
       if (len != 0) {
         // make sure packet is copied
         //printf("loop: There is a pending packet of size %d\n", len);
         for(auto& nic : hw::Devices::devices<hw::Nic>()) {
           INFO("loop", "sending events for Nic %s", nic->device_name().c_str());
-          nic->upstream_received_packet((char *) buf, len);
+          nic->upstream_received_packet(data, len);
         }
       }
     }

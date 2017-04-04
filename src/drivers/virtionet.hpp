@@ -161,7 +161,7 @@ public:
     uint16_t csum_offset;      // Offset after that to place checksum
   }__attribute__((packed));
 
-  void upstream_received_packet(char *data, int len) override {
+  void upstream_received_packet(uint8_t *data, int len) override {
     ;
   }
 
