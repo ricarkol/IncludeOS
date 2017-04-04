@@ -40,8 +40,6 @@ void Service::ready()
 
   client_ = std::make_unique<http::Client>(inet.tcp());
 
-  return;
-
   INFO("Client", "Testing against local server");
 
   auto req = client_->create_request();

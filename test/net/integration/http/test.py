@@ -3,6 +3,7 @@
 import sys
 import os
 import thread
+import time
 
 includeos_src = os.environ.get('INCLUDEOS_SRC',
                                os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))).split('/test')[0])
@@ -36,8 +37,11 @@ def Client_test():
 # Start web server in a separate thread
 thread.start_new_thread(Client_test, ())
 
+while True:
+    time.sleep (1)
+
 # Get an auto-created VM from the vmrunner
-vm = vmrunner.vms[0]
+#vm = vmrunner.vms[0]
 
 # Boot the VM, taking a timeout as parameter
-vm.cmake().boot(20).clean()
+#vm.cmake().boot(20).clean()
