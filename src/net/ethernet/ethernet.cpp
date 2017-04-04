@@ -84,7 +84,7 @@ namespace net {
         data += sizeof(header);
         len -= sizeof(header);
     */
-    INFO2("<Ethernet IN> %s => %s , Eth.type: 0x%x ",
+    debug2("<Ethernet IN> %s => %s , Eth.type: 0x%x ",
            eth->src.str().c_str(), eth->dest.str().c_str(), eth->type);
 
     // Stat increment packets received
