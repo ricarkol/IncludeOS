@@ -21,6 +21,7 @@
 
 #include <kernel/solo5_manager.hpp>
 #include "../drivers/solo5blk.hpp"
+#include "../drivers/solo5net.hpp"
 #include <hw/devices.hpp>
 #include <stdexcept>
 
@@ -29,65 +30,27 @@
 Solo5_manager::Device_registry Solo5_manager::devices_;
 
 void Solo5_manager::init() {
-  INFO("Solo5 Manager", "Looking for solo5 devices");
+  INFO("Solo5", "Looking for solo5 devices");
 
-  uint32_t id_solo5 {PCI::WTF};
+  uint32_t id_net {PCI::WTF};
+  uint32_t id_blk {PCI::WTF};
 
-  //id_solo5 = 0x10011AF4; // virtio and product virtioblk
-  id_solo5 = 0x1001CACA; // solo5 and product solo5blk
+  id_net = 0x1000CACA; // product solo5net and vendor solo5 (0xCACA)
+  id_blk = 0x1001CACA; // product solo5blk and vendor solo5 (0xCACA)
 
-  hw::PCI_Device dev {0xffff, id_solo5};
-  printf("vendor=%x product=%x\n", dev.vendor_id(), dev.product_id());
+  hw::PCI_Device dev_net {0xffff, id_net};
+  hw::PCI_Device dev_blk {0xffff, id_blk};
 
   // store device
-  devices_[dev.classcode()].emplace_back(dev);
+  devices_[dev_net.classcode()].emplace_back(dev_net);
+  devices_[dev_blk.classcode()].emplace_back(dev_blk);
 
   bool registered = true;
 
-  register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_SOLO5, 0x1001, &Solo5Blk::new_instance);
-  registered = register_device<hw::Block_device>(dev);
+  register_driver<hw::Nic>(hw::PCI_Device::VENDOR_SOLO5, 0x1000, &Solo5Net::new_instance);
+  registered = register_device<hw::Nic>(dev_net);
 
-  return;
-
-  /*
-   * Probe the PCI bus
-   * - Assuming bus number is 0, there are 255 possible addresses
-   */
-  uint32_t id {PCI::WTF};
-
-  for (uint16_t pci_addr {0}; pci_addr < 255; ++pci_addr) {
-    id = hw::PCI_Device::read_dword(pci_addr, PCI::CONFIG_VENDOR);
-
-    if (id != PCI::WTF) {
-      hw::PCI_Device dev {pci_addr, id};
-
-      // store device
-      devices_[dev.classcode()].emplace_back(dev);
-
-      bool registered = false;
-      // translate classcode to device and register
-      switch(dev.classcode())
-      {
-        case PCI::STORAGE:
-          registered = register_device<hw::Block_device>(dev);
-          break;
-
-        case PCI::NIC:
-          registered = register_device<hw::Nic>(dev);
-          break;
-
-        default:
-        {
-
-        }
-
-      }
-      debug("Device %s", registered ? "registed":"not registered");
-    }
-  }
-
-  // Pretty printing, end of device tree
-  // @todo should probably be moved, or optionally non-printed
-  INFO2("|");
-  INFO2("o");
+  register_driver<hw::Block_device>(hw::PCI_Device::VENDOR_SOLO5, 0x1001,
+                                    &Solo5Blk::new_instance);
+  registered = register_device<hw::Block_device>(dev_blk);
 }

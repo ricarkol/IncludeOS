@@ -95,8 +95,6 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   ScopedProfiler sp1{};
 #endif
 
-  solo5_console_write("bla\n", 4);
-
   default_stdout_handlers();
 
   // Print a fancy header
@@ -371,6 +369,8 @@ void OS::halt() {
   *os_cycles_hlt += cycles_since_boot() - *os_cycles_total;
 }
 
+static uint8_t buf[1526];
+
 void OS::event_loop() {
 
   FILLINE('=');
@@ -379,11 +379,22 @@ void OS::event_loop() {
   FILLINE('~');
 
   while (power_) {
+    int rc;
     Timers::timers_handler();
     //IRQ_manager::get().process_interrupts();
     //printf("OS going to sleep.\n");
     //OS::halt();
-    solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+    rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+    if (rc != 0) {
+      int len = sizeof(buf);
+      //auto pckt_ptr = recv_packet(res.data(), res.size());
+      //Link::receive(std::move(pckt_ptr));
+      //solo5_net_write_sync(buf, pckt->size());
+      solo5_net_read_sync(buf, &len);
+      if (len != 0)
+        // make sure packet is copied
+        printf("loop: There is a pending packet of size %d\n", len);
+    }
   }
 
   // Cleanup

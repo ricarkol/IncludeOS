@@ -36,6 +36,8 @@ extern "C" uint32_t os_get_highest_blocking_level() {
 };
 
 
+static uint8_t buf[1526];
+
 /**
  * A quick and dirty implementation of blocking calls, which simply halts,
  * then calls  the event loop, then returns.
@@ -63,7 +65,18 @@ void OS::block(){
     *highest_blocking_level = *blocking_level;
 
   if (1 /* ukvm */) {
-    solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+    int rc;
+    rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+    if (rc != 0) {
+      int len = sizeof(buf);
+      //auto pckt_ptr = recv_packet(res.data(), res.size());
+      //Link::receive(std::move(pckt_ptr));
+      //solo5_net_write_sync(buf, pckt->size());
+      solo5_net_read_sync(buf, &len);
+      if (len != 0)
+        // make sure packet is copied
+        printf("block: There is a pending packet of size %d\n", len);
+    }
   } else {
     OS::halt();
   }

@@ -28,7 +28,8 @@ namespace net
     _icmp6(_ip6_list[0]), _udp6(_ip6_list[0])
   {
     // For now we're just using the one interface
-    auto& eth0 = Dev::eth<0,VirtioNet>();
+    //auto& eth0 = Dev::eth<0,VirtioNet>();
+    auto& eth0 = Dev::eth<0,Solo5Net>();
 
     /** Create arp- and ethernet objects for the interfaces.
 
@@ -83,7 +84,8 @@ namespace net
     _ip6.set_linklayer_out(ip6_to_eth);
 
     /** Downstream delegates */
-    auto phys_top(downstream{eth0, &Nic<VirtioNet>::transmit});
+    //auto phys_top(downstream{eth0, &Nic<VirtioNet>::transmit});
+    auto phys_top(downstream{eth0, &Nic<Solo5Net>::transmit});
     auto eth_top(downstream{_eth, &Ethernet::transmit});
     auto arp_top(downstream{_arp, &Arp::transmit});
     auto ip4_top(downstream{_ip4, &IP4::transmit});

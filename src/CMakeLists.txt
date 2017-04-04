@@ -22,7 +22,7 @@ add_custom_command(
 set(OS_OBJECTS
   kernel/start.asm kernel/kernel_start.cpp kernel/sanity_checks.cpp
   kernel/syscalls.cpp kernel/interrupts.asm kernel/os.cpp kernel/cpuid.cpp
-  kernel/memmap.cpp kernel/irq_manager.cpp kernel/pci_manager.cpp kernel/solo5_manager.cpp drivers/solo5blk.cpp
+  kernel/memmap.cpp kernel/irq_manager.cpp kernel/pci_manager.cpp kernel/solo5_manager.cpp drivers/solo5blk.cpp drivers/solo5net.cpp
   kernel/service_stub.cpp kernel/main_call.cpp
   kernel/elf.cpp kernel/terminal.cpp kernel/terminal_disk.cpp
   kernel/vga.cpp kernel/context.cpp kernel/context_asm.asm kernel/block.cpp
