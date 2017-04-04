@@ -66,9 +66,7 @@ public:
   { return booted_at_; }
 
   /** Uptime in whole seconds. */
-  static RTC::timestamp_t uptime() {
-    return RTC::now() - booted_at_;
-  }
+  static RTC::timestamp_t uptime();
 
   static MHz cpu_freq() noexcept
   { return cpu_mhz_; }

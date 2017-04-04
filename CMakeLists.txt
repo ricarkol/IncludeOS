@@ -39,7 +39,7 @@ set(WARNS "-Wall -Wextra") #-pedantic
 # configure options
 option(debug "Build with debugging symbols (OBS: Dramatically increases binary size)" OFF)
 option(debug-info "Build like \"all\" but with debugging output (i.e. the 'debug'-macro) enabled" OFF)
-option(debug-all "Build with debugging symbols + debugging output, i.e. \"debug\" + \"debug-info\"" OFF)
+option(debug-all "Build with debugging symbols + debugging output, i.e. \"debug\" + \"debug-info\"" ON)
 option(minimal "Build for minimal size" OFF)
 option(stripped "reduce size" OFF)
 

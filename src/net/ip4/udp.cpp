@@ -94,7 +94,7 @@ void UDP::close(UDP::port_t port)
 void UDP::transmit(UDP::Packet_ptr udp)
 {
   debug2("<UDP> Transmitting %i bytes (seg=%i) from %s to %s:%i\n",
-         udp->length(), udp->ip4_segment_size(),
+         udp->length(), 0,
          udp->src().str().c_str(),
          udp->dst().str().c_str(), udp->dst_port());
 

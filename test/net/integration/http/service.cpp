@@ -61,7 +61,6 @@ void Service::ready()
     Timers::oneshot(5s, [](auto) { printf("SUCCESS\n"); });
   });
 
-
   INFO("Client", "Testing against Acorn");
 
   const std::string acorn_url{"http://acorn2.unofficial.includeos.io/"};

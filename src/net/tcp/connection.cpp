@@ -769,12 +769,12 @@ void Connection::set_state(State& state) {
 void Connection::timewait_start() {
   const auto timeout = 2 * host().MSL(); // 60 seconds
   timewait_timer.start(timeout);
-  debug2("<Connection::timewait_start> TimeWait timer [%u] started.\n", timewait_timer.id);
+  debug2("<Connection::timewait_start> TimeWait timer started.\n");
 }
 
 void Connection::timewait_stop() {
   timewait_timer.stop();
-  debug2("<Connection::timewait_stop> TimeWait timer [%u] stopped.\n", timewait_timer.id);
+  debug2("<Connection::timewait_stop> TimeWait timer stopped.\n");
 }
 
 void Connection::timewait_restart() {

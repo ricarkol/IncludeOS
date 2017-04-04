@@ -46,7 +46,10 @@ public:
   const hw::MAC_addr& mac() const noexcept override
   {
     char *smac = solo5_net_mac_str();
-    return hw::MAC_addr(smac);
+    INFO2("MAC from solo5: %s", smac);
+    hw::MAC_addr mac(smac);
+    INFO2("MAC after translation: %s", mac.str().c_str());
+    return mac;
   }
 
   uint16_t MTU() const noexcept override

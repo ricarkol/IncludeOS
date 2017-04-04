@@ -90,6 +90,10 @@ const std::string& OS::cmdline_args() noexcept
   return os_cmdline;
 }
 
+RTC::timestamp_t OS::uptime() {
+  return solo5_clock_monotonic() - booted_at_;
+  //return RTC::now() - booted_at_;
+}
 
 void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
 
@@ -272,6 +276,7 @@ void OS::start(uint32_t boot_magic, uint32_t boot_addr) {
   // Realtime/monotonic clock
   //RTC::init();
   //booted_at_ = RTC::now();
+  booted_at_ = solo5_clock_monotonic();
 
 #ifdef ENABLE_PROFILERS
   ScopedProfiler sp10("OS::start Plugins init");
