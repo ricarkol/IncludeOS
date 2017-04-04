@@ -84,7 +84,6 @@ namespace fs
         // go to this directory, unless its the last name
         debug("traverse_sync: Found match for %s", name.c_str());
         // enter the matching directory
-        debug("\t\t cluster: %lu\n", e.block);
         // only follow if the name is a directory
         if (e.type() == DIR) {
           found = e;

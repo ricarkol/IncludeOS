@@ -265,8 +265,7 @@ namespace net
       if (port == DHCP_DEST_PORT)
       {
         // we have got a DHCP Offer
-        debug("Received possible DHCP OFFER from %s:%d\n",
-              addr.str().c_str(), DHCP_DEST_PORT);
+        debug("Received possible DHCP OFFER\n");
         this->offer(socket, data, len);
       }
     });
@@ -453,8 +452,7 @@ namespace net
       if (port == DHCP_DEST_PORT)
       {
         // we have hopefully got a DHCP Ack
-        debug("\tReceived DHCP ACK from %s:%d\n",
-              addr.str().c_str(), DHCP_DEST_PORT);
+        debug("\tReceived DHCP ACK \n");
         this->acknowledge(data, len);
       }
     });

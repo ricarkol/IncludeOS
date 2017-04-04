@@ -914,7 +914,7 @@ void Connection::default_on_disconnect(Connection_ptr conn, Disconnect) {
 void Connection::default_on_close() { }
 
 void Connection::default_on_error(TCPException error) {
-  (void)error
+  (void)error;
   debug("<Connection::@Error> TCPException: %s \n", error.what());
 }
 

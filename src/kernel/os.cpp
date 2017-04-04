@@ -392,21 +392,13 @@ void OS::event_loop() {
     if (rc == 0) {
       Timers::timers_handler();
     } else {
-      //uint8_t buf[1526];
+      uint8_t data[1580];
       int len = 1580;
-
-      // arbitrarily big buffer
-      uint8_t* data = new uint8_t[1580]; // free me
-
-      //auto pckt_ptr = recv_packet(res.data(), res.size());
-      //Link::receive(std::move(pckt_ptr));
-      //solo5_net_write_sync(buf, pckt->size());
-      solo5_net_read_sync(data + sizeof(net::Packet), &len);
-      if (len != 0) {
+      if (solo5_net_read_sync(data, &len) == 0) {
         // make sure packet is copied
-        //printf("loop: There is a pending packet of size %d\n", len);
         for(auto& nic : hw::Devices::devices<hw::Nic>()) {
           nic->upstream_received_packet(data, len);
+          break;
         }
       }
     }

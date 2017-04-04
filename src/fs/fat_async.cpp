@@ -122,7 +122,6 @@ namespace fs
               // go to this directory, unless its the last name
               debug("Found match for %s", name.c_str());
               // enter the matching directory
-              debug("\t\t cluster: %llu\n", e.block);
               // only follow directories
               if (e.type() == DIR)
                 (*next)(e.block());
@@ -189,7 +188,6 @@ namespace fs
       {
         if (!data) {
           // general I/O error occurred
-          debug("Failed to read sector %u for read()", sector);
           callback({ error_t::E_IO, "Unable to read file" }, buffer_t(), 0);
           return;
         }

@@ -22,6 +22,8 @@
 #include <net/ip4/packet_ip4.hpp>
 #include <net/util.hpp>
 
+#define DEBUG 1
+
 namespace net {
 
   ICMPv4::ICMPv4(Stack& inet) :
@@ -60,8 +62,8 @@ namespace net {
     hdr->identifier = full_hdr->icmp_hdr.identifier;
     hdr->sequence   = full_hdr->icmp_hdr.sequence;
 
-    debug("<ICMP> Rest of header IN: 0x%lx OUT: 0x%lx\n",
-          full_hdr->icmp_hdr.rest, hdr->rest);
+    //debug("<ICMP> Rest of header IN: 0x%lx OUT: 0x%lx\n",
+    //      full_hdr->icmp_hdr.rest, hdr->rest);
 
     debug("<ICMP> Transmitting answer\n");
 

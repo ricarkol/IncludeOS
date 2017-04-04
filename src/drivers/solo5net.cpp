@@ -71,19 +71,10 @@ void Solo5Net::transmit(net::Packet_ptr pckt) {
 std::unique_ptr<Packet>
 Solo5Net::recv_packet(uint8_t* data, uint16_t size)
 {
-/*
-  // @WARNING: Initializing packet as "full", i.e. size == capacity
-  Packet* packet = (Packet*) data;
-  new (packet) Packet(1580, size, nullptr);
-  return Packet_ptr(packet);
-*/
-
- // auto* pckt = (Packet*) bufstore().get_buffer();
-  auto* pckt = (Packet*) (data);
+  auto* pckt = (Packet*) bufstore().get_buffer();
   new (pckt) Packet(bufsize(), size, &bufstore());
-  //uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
-  //memcpy(data_, data, size);
-  //return Packet_ptr(pckt);
+  uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
+  memcpy(data_, data, size);
   return std::unique_ptr<Packet> (pckt);
 }
 

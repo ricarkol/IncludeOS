@@ -3,6 +3,7 @@
 import socket
 import sys
 import os
+import time
 
 includeos_src = os.environ.get('INCLUDEOS_SRC',
                                os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))).split('/test')[0])
@@ -96,19 +97,27 @@ def test5(trigger):
     print INFO, trigger.rstrip(),  "triggered by VM"
     listen(TEST5)
 
-
 #listen(8085)
 
 
 # Get an auto-created VM from the vmrunner
-vm = vmrunner.vms[0]
+#vm = vmrunner.vms[0]
 
 # Add custom event-handler
-vm.on_output("TEST1", test1)
-vm.on_output("TEST2", test2)
-vm.on_output("TEST3", test3)
-vm.on_output("TEST4", test4)
+#vm.on_output("TEST1", test1)
+#vm.on_output("TEST2", test2)
+#vm.on_output("TEST3", test3)
+#vm.on_output("TEST4", test4)
 
+connect(TEST1)
+connect(TEST2)
+connect(TEST3)
+connect(TEST4)
+connect(TEST5)
+
+
+while True:
+    time.sleep(1)
 
 # Boot the VM, taking a timeout as parameter
-vm.cmake().boot(120).clean()
+#vm.cmake().boot(120).clean()
