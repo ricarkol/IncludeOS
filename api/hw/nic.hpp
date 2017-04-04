@@ -39,7 +39,7 @@ namespace hw {
 
     /** Get a readable name. */
     virtual const char* driver_name() const = 0;
-
+  
     std::string device_name() const {
       return "eth" + std::to_string(N);
     }
@@ -54,6 +54,7 @@ namespace hw {
     virtual uint16_t MTU() const noexcept = 0;
 
     /** Implemented by the underlying (link) driver */
+    virtual void upstream_received_packet(char *data, int len) = 0;
     virtual downstream create_link_downstream() = 0;
     virtual void set_ip4_upstream(upstream handler) = 0;
     virtual void set_ip6_upstream(upstream handler) = 0;

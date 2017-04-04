@@ -38,6 +38,8 @@
 #include <statman>
 #include <vector>
 #include <solo5.h>
+#include "../drivers/solo5net.hpp"
+#include <hw/devices.hpp>
 
 extern "C" void kernel_sanity_checks();
 //#define ENABLE_PROFILERS
@@ -391,9 +393,14 @@ void OS::event_loop() {
       //Link::receive(std::move(pckt_ptr));
       //solo5_net_write_sync(buf, pckt->size());
       solo5_net_read_sync(buf, &len);
-      if (len != 0)
+      if (len != 0) {
         // make sure packet is copied
-        printf("loop: There is a pending packet of size %d\n", len);
+        //printf("loop: There is a pending packet of size %d\n", len);
+        for(auto& nic : hw::Devices::devices<hw::Nic>()) {
+          INFO("loop", "sending events for Nic %s", nic->device_name().c_str());
+          nic->upstream_received_packet((char *) buf, len);
+        }
+      }
     }
   }
 
