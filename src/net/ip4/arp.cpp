@@ -121,6 +121,8 @@ namespace net {
       debug("Time now: %llu\n", static_cast<uint64_t>(OS::uptime()));
     }
 
+    return entry != cache_.end();
+
     return entry != cache_.end()
       and (entry->second.timestamp_ + cache_exp_t_ > static_cast<uint64_t>(OS::uptime()));
   }

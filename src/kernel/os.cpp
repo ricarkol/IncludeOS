@@ -385,12 +385,13 @@ void OS::event_loop() {
 
   while (power_) {
     int rc;
-    Timers::timers_handler();
     //IRQ_manager::get().process_interrupts();
     //printf("OS going to sleep.\n");
     //OS::halt();
     rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
-    if (rc != 0) {
+    if (rc == 0) {
+      Timers::timers_handler();
+    } else {
       //uint8_t buf[1526];
       int len = 1580;
 
@@ -405,7 +406,6 @@ void OS::event_loop() {
         // make sure packet is copied
         //printf("loop: There is a pending packet of size %d\n", len);
         for(auto& nic : hw::Devices::devices<hw::Nic>()) {
-          INFO("loop", "sending events for Nic %s", nic->device_name().c_str());
           nic->upstream_received_packet(data, len);
         }
       }
