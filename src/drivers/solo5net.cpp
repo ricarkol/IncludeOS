@@ -53,7 +53,6 @@ void Solo5Net::transmit(net::Packet_ptr pckt) {
     // write data to network
     // explicitly release the data to prevent destructor being called
     net::Packet* pckt = tail.release();
-    printf("transmitting packet of size %d\n", pckt->size());
     net::BufferStore::buffer_t buf = pckt->buffer();
     solo5_net_write_sync(buf, pckt->size());
 
@@ -90,7 +89,6 @@ Solo5Net::recv_packet(uint8_t* data, uint16_t size)
 
 void Solo5Net::upstream_received_packet(uint8_t *data, int len)
 {
-  printf("loop: There is a pending packet of size %d\n", len);
   auto pckt_ptr = recv_packet(data, len);
   Link::receive(std::move(pckt_ptr));
 }
