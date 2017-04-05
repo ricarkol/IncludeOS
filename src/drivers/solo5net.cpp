@@ -71,17 +71,23 @@ void Solo5Net::transmit(net::Packet_ptr pckt) {
 std::unique_ptr<Packet>
 Solo5Net::recv_packet(uint8_t* data, uint16_t size)
 {
-  auto* pckt = (Packet*) bufstore().get_buffer();
-  new (pckt) Packet(bufsize(), size, &bufstore());
-  uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
-  memcpy(data_, data, size);
-  return std::unique_ptr<Packet> (pckt);
+  if (bufstore().available() > 1) {
+    auto* pckt = (Packet*) bufstore().get_buffer();
+    new (pckt) Packet(bufsize(), size, &bufstore());
+    uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
+    memcpy(data_, data, size);
+    return std::unique_ptr<Packet> (pckt);
+  } else {
+    INFO("solo5net", "no bufstore space available");
+    return NULL;
+  }
 }
 
 void Solo5Net::upstream_received_packet(uint8_t *data, int len)
 {
   auto pckt_ptr = recv_packet(data, len);
-  Link::receive(std::move(pckt_ptr));
+  if (pckt_ptr)
+    Link::receive(std::move(pckt_ptr));
 }
 
 void Solo5Net::deactivate()

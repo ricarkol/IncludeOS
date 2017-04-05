@@ -392,8 +392,10 @@ void OS::event_loop() {
     if (rc == 0) {
       Timers::timers_handler();
     } else {
-      uint8_t data[1580];
-      int len = 1580;
+      int len = 1512;
+      uint8_t *data = (uint8_t *) malloc(1512);
+      memset(data, 0, 1512);
+
       if (solo5_net_read_sync(data, &len) == 0) {
         // make sure packet is copied
         for(auto& nic : hw::Devices::devices<hw::Nic>()) {
@@ -401,6 +403,8 @@ void OS::event_loop() {
           break;
         }
       }
+
+      free(data);
     }
   }
 

@@ -24,7 +24,6 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.end_headers()
         s.wfile.write("%s" % s.path)
 
-
 def Client_test():
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class((HOST, PORT), RequestHandler)
@@ -35,10 +34,9 @@ def Client_test():
     httpd.server_close()
 
 # Start web server in a separate thread
-thread.start_new_thread(Client_test, ())
+#thread.start_new_thread(Client_test, ())
 
-while True:
-    time.sleep (1)
+Client_test()
 
 # Get an auto-created VM from the vmrunner
 #vm = vmrunner.vms[0]

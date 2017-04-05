@@ -66,12 +66,12 @@ public:
 
   /** Space available in the transmit queue, in packets */
   size_t transmit_queue_available() override {
-    return 1000; // any big random number for now
+    return 1; // any big random number for now
   }
 
   /** Number of incoming packets waiting in the RX-queue */
   size_t receive_queue_waiting() override {
-    return 1;
+    return 0;
   }
 
   void deactivate() override;
