@@ -392,9 +392,10 @@ void OS::event_loop() {
     if (rc == 0) {
       Timers::timers_handler();
     } else {
-      int len = 1512;
-      uint8_t *data = (uint8_t *) malloc(1512);
-      memset(data, 0, 1512);
+      int len = 1520;
+      uint8_t *data = (uint8_t *) malloc(1520);
+      assert(data);
+      memset(data, 0, 1520);
 
       if (solo5_net_read_sync(data, &len) == 0) {
         // make sure packet is copied

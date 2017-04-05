@@ -31,6 +31,11 @@
 
 using namespace net;
 
+constexpr size_t MTU_ = 1520;
+constexpr size_t BUFFER_CNT = 1000;
+// TODO: check if the NIC bufstore is initialized
+BufferStore solo5_bufstore{ BUFFER_CNT,  MTU_ };
+
 const char* Solo5Net::driver_name() const { return "Solo5Net"; }
 
 Solo5Net::Solo5Net(hw::PCI_Device& d)
@@ -71,16 +76,11 @@ void Solo5Net::transmit(net::Packet_ptr pckt) {
 std::unique_ptr<Packet>
 Solo5Net::recv_packet(uint8_t* data, uint16_t size)
 {
-  if (bufstore().available() > 1) {
-    auto* pckt = (Packet*) bufstore().get_buffer();
-    new (pckt) Packet(bufsize(), size, &bufstore());
-    uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
-    memcpy(data_, data, size);
-    return std::unique_ptr<Packet> (pckt);
-  } else {
-    INFO("solo5net", "no bufstore space available");
-    return NULL;
-  }
+  auto* pckt = (Packet*) solo5_bufstore.get_buffer();
+  new (pckt) Packet(MTU_, size, &solo5_bufstore);
+  uint8_t* data_ = reinterpret_cast<uint8_t *>(pckt->buffer());
+  memcpy(data_, data, size);
+  return std::unique_ptr<Packet> (pckt);
 }
 
 void Solo5Net::upstream_received_packet(uint8_t *data, int len)

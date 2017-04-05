@@ -64,22 +64,27 @@ void OS::block(){
   if (*blocking_level > *highest_blocking_level)
     *highest_blocking_level = *blocking_level;
 
-  if (1 /* ukvm */) {
-    int rc;
-    rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
-    if (rc != 0) {
-      int len = sizeof(buf);
-      //auto pckt_ptr = recv_packet(res.data(), res.size());
-      //Link::receive(std::move(pckt_ptr));
-      //solo5_net_write_sync(buf, pckt->size());
-      solo5_net_read_sync(buf, &len);
-      if (len != 0)
-        // make sure packet is copied
-        printf("block: There is a pending packet of size %d\n", len);
-    }
+  int rc;
+  rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+  if (rc == 0) {
+    Timers::timers_handler();
   } else {
-    OS::halt();
+    int len = 1520;
+    uint8_t *data = (uint8_t *) malloc(1520);
+    assert(data);
+    memset(data, 0, 1520);
+
+    if (solo5_net_read_sync(data, &len) == 0) {
+      // make sure packet is copied
+      for(auto& nic : hw::Devices::devices<hw::Nic>()) {
+        nic->upstream_received_packet(data, len);
+        break;
+      }
+    }
+
+    free(data);
   }
+  //OS::halt();
 
   // Process callbacks
   //IRQ_manager::get().process_interrupts();
