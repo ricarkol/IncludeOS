@@ -52,6 +52,7 @@ void Service::ready()
       printf("Error: %s \n", err.to_string().c_str());
 
     printf("Response:\n%s\n", res->to_string().c_str());
+    printf("Body:\n%s\n", res->body());
     CHECKSERT(!err, "No error");
     CHECKSERT(res->body() == "/testing", "Received body: \"/testing\"");
     printf("Response:\n%s\n", res->to_string().c_str());

@@ -60,6 +60,7 @@ namespace http {
   void Client_connection::recv_response(buffer_t buf, size_t len)
   {
     if(len == 0) {
+      printf("end_response 1\n");
       end_response({Error::NO_REPLY});
       return;
     }
@@ -78,6 +79,7 @@ namespace http {
       }
       catch(...)
       {
+        printf("end_response 2\n");
         end_response({Error::INVALID});
         return;
       }
@@ -92,10 +94,18 @@ namespace http {
         res_->parse();
       }
       // here we assume all headers has already been received (could not be true?)
+      /*
+       Yes, it happens if the header is split into multiple TCP segments.
+      */
+      //else if (strcmp(data, "Content") == 0) {
+      //  *res_ << data;
+      //}
       else
       {
         // add chunks of body data
-        res_->add_chunk(data);
+        //res_->add_chunk(data);
+        *res_ << data;
+        res_->parse();
       }
     }
 
@@ -115,17 +125,23 @@ namespace http {
           // risk buffering forever if no timeout
           if(conlen == res_->body().size())
           {
+            printf("end_response 3\n");
             end_response();
           }
         }
         catch(...)
-        { end_response({Error::INVALID}); }
+        {
+          printf("end_response 4\n");
+          end_response({Error::INVALID}); }
       }
-      else
-        end_response();
+      else {
+        printf("end_response 5\n");
+        //end_response();
+      }
     }
     else if(req_->method() == HEAD)
     {
+      printf("end_response 6\n");
       end_response();
     }
   }
@@ -158,7 +174,8 @@ namespace http {
       auto callback = std::move(on_response_);
       on_response_.reset();
       timer_.stop();
-      callback(Error::CLOSING, std::move(res_));
+      callback(Error::NONE, std::move(res_));
+      //callback(Error::CLOSING, std::move(res_));
     }
 
     client_.close(*this);
