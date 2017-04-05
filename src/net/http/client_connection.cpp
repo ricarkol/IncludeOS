@@ -60,7 +60,7 @@ namespace http {
   void Client_connection::recv_response(buffer_t buf, size_t len)
   {
     if(len == 0) {
-      printf("end_response 1\n");
+      debug2("end_response 1\n");
       end_response({Error::NO_REPLY});
       return;
     }
@@ -79,7 +79,7 @@ namespace http {
       }
       catch(...)
       {
-        printf("end_response 2\n");
+        debug2("end_response 2\n");
         end_response({Error::INVALID});
         return;
       }
@@ -88,22 +88,11 @@ namespace http {
     else
     {
       // this is the case when Status line is received, but not yet headers.
-      if(res_->header().is_empty() && req_->method() != HEAD)
-      {
-        *res_ << data;
-        res_->parse();
-      }
       // here we assume all headers has already been received (could not be true?)
-      /*
-       Yes, it happens if the header is split into multiple TCP segments.
-      */
-      //else if (strcmp(data, "Content") == 0) {
-      //  *res_ << data;
-      //}
-      else
+      // Yes, it happens if the header is split into multiple TCP segments.
+      //if(res_->header().is_empty() && req_->method() != HEAD)
+      if(req_->method() != HEAD)
       {
-        // add chunks of body data
-        //res_->add_chunk(data);
         *res_ << data;
         res_->parse();
       }
@@ -125,23 +114,24 @@ namespace http {
           // risk buffering forever if no timeout
           if(conlen == res_->body().size())
           {
-            printf("end_response 3\n");
+            debug2("end_response 3\n");
             end_response();
           }
         }
         catch(...)
         {
-          printf("end_response 4\n");
+          debug2("end_response 4\n");
           end_response({Error::INVALID}); }
       }
       else {
-        printf("end_response 5\n");
+        debug2("end_response 5\n");
+        // rkj: not necessarily
         //end_response();
       }
     }
     else if(req_->method() == HEAD)
     {
-      printf("end_response 6\n");
+      debug2("end_response 6\n");
       end_response();
     }
   }

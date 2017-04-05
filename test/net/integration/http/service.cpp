@@ -57,8 +57,8 @@ void Service::ready()
     CHECKSERT(res->body() == "/testing", "Received body: \"/testing\"");
     printf("Response:\n%s\n", res->to_string().c_str());
 
-    //using namespace std::chrono; // zzz...
-    //Timers::oneshot(5s, [](auto) { printf("SUCCESS\n"); });
+    using namespace std::chrono; // zzz...
+    Timers::oneshot(5s, [](auto) { printf("SUCCESS\n"); });
   });
 
   INFO("Client", "Testing against Acorn");

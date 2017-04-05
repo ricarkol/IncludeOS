@@ -138,7 +138,7 @@ Solo5Net::recv_packet(uint8_t* data, uint16_t size)
 void Solo5Net::upstream_received_packet(uint8_t *data, int len)
 {
   auto pckt_ptr = recv_packet(data, len);
-  INFO("Solo5Net", "receive packet of len %d", len);
+  //INFO("Solo5Net", "receive packet of len %d", len);
   //hexDump("packet", data, len);
   Link::receive(std::move(pckt_ptr));
 }
