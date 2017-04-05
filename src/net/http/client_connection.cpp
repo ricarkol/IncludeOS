@@ -164,6 +164,7 @@ namespace http {
       auto callback = std::move(on_response_);
       on_response_.reset();
       timer_.stop();
+      // rkj: as we are not ending the response at line 129 anymore:
       callback(Error::NONE, std::move(res_));
       //callback(Error::CLOSING, std::move(res_));
     }
