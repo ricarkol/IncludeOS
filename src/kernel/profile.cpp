@@ -64,8 +64,8 @@ struct Sampler
     using namespace std::chrono;
     static const milliseconds GATHER_PERIOD_MS = 150ms;
 
-    hw::PIT::instance().on_repeated_timeout(
-        GATHER_PERIOD_MS, gather_stack_sampling);
+   // hw::PIT::instance().on_repeated_timeout(
+     //   GATHER_PERIOD_MS, gather_stack_sampling);
   }
   void add(void* current, void* ra)
   {
