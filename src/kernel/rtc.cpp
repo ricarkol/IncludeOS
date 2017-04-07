@@ -5,6 +5,7 @@
 #include <hw/cpu.hpp>
 #include <hw/cmos.hpp>
 #include <hertz>
+#include <solo5.h>
 
 #define MYINFO(X,...) INFO("RTC", X, ##__VA_ARGS__)
 
@@ -33,8 +34,9 @@ void RTC::init()
 
 RTC::timestamp_t RTC::now()
 {
-  auto ticks = hw::CPU::rdtsc() - current_ticks;
-  auto diff  = ticks / Hz(MHz(OS::cpu_freq())).count();
+  return solo5_clock_monotonic();
+  //auto ticks = hw::CPU::rdtsc() - current_ticks;
+  //auto diff  = ticks / Hz(MHz(OS::cpu_freq())).count();
 
-  return current_time + diff;
+  //return current_time + diff;
 }
