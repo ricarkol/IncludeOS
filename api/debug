@@ -20,6 +20,9 @@
 #ifndef API_DEBUG_HEADER
 #define API_DEBUG_HEADER
 
+#define DEBUG2 1
+#undef NO_DEBUG
+
 #if defined(DEBUG) && ! defined(NO_DEBUG)
 #define debug(X,...)  printf(X,##__VA_ARGS__);
 #else 

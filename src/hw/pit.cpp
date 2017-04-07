@@ -193,8 +193,8 @@ namespace hw {
       millisec_counter++;
 
 #ifdef DEBUG
-    if (millisec_counter % 100 == 0)
-      OS::rsprint(".");
+    //if (millisec_counter % 100 == 0)
+    //  OS::rsprint(".");
 #endif
 
     static std::vector<Timer_iterator> restart;
