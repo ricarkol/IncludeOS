@@ -36,8 +36,6 @@ extern "C" uint32_t os_get_highest_blocking_level() {
 };
 
 
-static uint8_t buf[1526];
-
 /**
  * A quick and dirty implementation of blocking calls, which simply halts,
  * then calls  the event loop, then returns.
@@ -65,7 +63,7 @@ void OS::block(){
     *highest_blocking_level = *blocking_level;
 
   int rc;
-  rc = solo5_poll(solo5_clock_monotonic() + 500000ULL); // now + 0.5 ms
+  rc = solo5_poll(solo5_clock_monotonic() + 50000ULL); // now + 0.05 ms
   if (rc == 0) {
     Timers::timers_handler();
   } else {
@@ -88,7 +86,6 @@ void OS::block(){
 
   // Process callbacks
   //IRQ_manager::get().process_interrupts();
-  Timers::timers_handler();
 
   // Decrement level
   *blocking_level -= 1;

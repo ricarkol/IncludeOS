@@ -160,6 +160,10 @@ public:
   /// Set the content of the buffer holding intermediate information
   ///
   void set_private_field(const char* base, const size_t length) noexcept;
+
+  inline bool headers_complete() const noexcept;
+
+  inline void set_headers_complete(const bool complete) noexcept;
 private:
   ///
   /// Class data members
@@ -167,6 +171,7 @@ private:
   Header                         header_fields_;
   Message_body                   message_body_;
   std::experimental::string_view field_;
+  bool         headers_complete_;
 }; //< class Message
 
 /**--v----------- Helper Functions -----------v--**/
@@ -175,6 +180,14 @@ private:
 /// Add a set of headers to a message
 ///
 Message& operator << (Message& res, const Header_set& headers);
+
+inline void Message::set_headers_complete(const bool complete) noexcept {
+  headers_complete_ = complete;
+}
+
+inline bool Message::headers_complete() const noexcept {
+  return headers_complete_;
+}
 
 /**--^----------- Helper Functions -----------^--**/
 

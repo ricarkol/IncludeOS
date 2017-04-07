@@ -90,11 +90,16 @@ namespace http {
       // this is the case when Status line is received, but not yet headers.
       // here we assume all headers has already been received (could not be true?)
       // Yes, it happens if the header is split into multiple TCP segments.
-      //if(res_->header().is_empty() && req_->method() != HEAD)
-      if(req_->method() != HEAD)
+      if(not res_->headers_complete() && req_->method() != HEAD)
       {
         *res_ << data;
         res_->parse();
+      }
+      // here we assume all headers has already been received (could not be true?)
+      else
+      {
+        // add chunks of body data
+        res_->add_chunk(data);
       }
     }
 
@@ -102,20 +107,26 @@ namespace http {
     // TODO: Temporary, not good enough
     // if(res_->is_complete())
     // Assume we want some headers
-    if(!header.is_empty())
+    if(res_->headers_complete())
+    //if(!header.is_empty())
     {
       if(header.has_field(header::Content_Length))
       {
         try
         {
           const unsigned conlen = std::stoul(header.value(header::Content_Length).to_string());
+          const unsigned body_size = res_->body().size();
           debug2("<http::Connection> [%s] Data: %u ConLen: %u Body:%u\n",
-            req_->uri().to_string().to_string().c_str(), data.size(), conlen, res_->body().size());
+            req_->uri().to_string().to_string().c_str(), data.size(), conlen, body_size);
           // risk buffering forever if no timeout
-          if(conlen == res_->body().size())
+          if(body_size == conlen)
           {
             debug2("end_response 3\n");
             end_response();
+          }
+          else if(body_size > conlen)
+          {
+            end_response({Error::INVALID});
           }
         }
         catch(...)
@@ -126,7 +137,7 @@ namespace http {
       else {
         debug2("end_response 5\n");
         // rkj: not necessarily
-        //end_response();
+        end_response();
       }
     }
     else if(req_->method() == HEAD)
@@ -151,22 +162,24 @@ namespace http {
     // avoid trying to parse any more responses
     tcpconn_->on_read(0, nullptr);
 
+    if (tcpconn_ == nullptr) {
+      close();
     // user callback may override this
-    if(!keep_alive_)
+    } if(!keep_alive_)
       tcpconn_->close();
+
+    //end();
   }
 
   void Client_connection::close()
   {
-    // if the user already
+    // if the user havent received a response yet
     if(on_response_ != nullptr)
     {
       auto callback = std::move(on_response_);
       on_response_.reset();
       timer_.stop();
-      // rkj: as we are not ending the response at line 129 anymore:
-      callback(Error::NONE, std::move(res_));
-      //callback(Error::CLOSING, std::move(res_));
+      callback(Error::CLOSING, std::move(res_));
     }
 
     client_.close(*this);
