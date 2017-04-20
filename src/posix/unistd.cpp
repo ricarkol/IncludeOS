@@ -22,6 +22,7 @@
 #include <kernel/rng.hpp>
 #include <fs/vfs.hpp>
 #include <file_fd.hpp>
+#include <solo5.h>
 
 static const int rng_fd       {998}; // temp
 
@@ -167,12 +168,13 @@ int isatty(int fd) {
 #include <kernel/rtc.hpp>
 unsigned int sleep(unsigned int seconds)
 {
-  int64_t now  = RTC::now();
-  int64_t done = now + seconds;
+  int64_t now  = solo5_clock_wall();
+  int64_t ns = (int64_t)(seconds)*(int64_t)(1000000000);
+  int64_t done = now + ns; 
   while (true) {
     if (now >= done) break;
     OS::block();
-    now = RTC::now();
+    now  = solo5_clock_wall();
   }
   return 0;
 }
