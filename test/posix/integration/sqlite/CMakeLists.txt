@@ -7,7 +7,7 @@ endif()
 
 include($ENV{INCLUDEOS_PREFIX}/includeos/pre.service.cmake)
 
-project (test_utsname)
+project (test_sqlite)
 
 # Human-readable name of your service
 set(SERVICE_NAME "sqlite test")
@@ -20,9 +20,17 @@ set(MAX_MEM 128)
 
 # Source files to be linked with OS library parts to form bootable image
 set(SOURCES
+    service.cpp
     sqlite_test.c
     sqlite3.c
     )
+
+if ("$ENV{PLATFORM}" STREQUAL "x86_solo5")
+  set(DRIVERS solo5blk)
+else()
+  set(DRIVERS virtioblk)
+endif()
+
 
 # To add your own include paths:
 #set(LOCAL_INCLUDES ".")

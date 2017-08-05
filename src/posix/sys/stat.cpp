@@ -220,8 +220,33 @@ mode_t umask(mode_t cmask)
   return DEFAULT_UMASK;
 }
 
-int fstat(int, struct stat* st) {
-  debug("SYSCALL FSTAT Dummy, returning OK 0");
-  st->st_mode = S_IFCHR;
+static const int rng_fd       {998}; // temp
+
+int fstat(int fd, struct stat* buf) {
+  if(fd == rng_fd) {
+    return 0;
+  }
+  try {
+    auto& fildes = FD_map::_get(fd);
+    auto ent = fildes.get_dirent();
+    if (ent.is_valid())
+    {
+      if (ent.is_file()) buf->st_mode = S_IFREG;
+      if (ent.is_dir()) buf->st_mode = S_IFDIR;
+      buf->st_dev = ent.device_id();
+      buf->st_ino = ent.block();
+      buf->st_nlink = 1;
+      buf->st_size = ent.size();
+      buf->st_atime = ent.modified();
+      buf->st_ctime = ent.modified();
+      buf->st_mtime = ent.modified();
+      buf->st_blocks = buf->st_size > 0 ? round_up(buf->st_size, 512) : 0;
+      buf->st_blksize = fs::MemDisk::SECTOR_SIZE;
+     }
+  }
+  catch(const FD_not_found&) {
+    errno = EBADF;
+    return -1;
+  }
   return 0;
 }

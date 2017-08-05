@@ -21,6 +21,7 @@
 
 #include <sys/socket.h>
 #include <cstdarg>
+#include <fs/dirent.hpp>
 
 /**
  * @brief File descriptor
@@ -66,6 +67,7 @@ public:
   virtual int   mkfifoat(const char *, mode_t) { return -1; }
   virtual int   mknodat(const char *, mode_t, dev_t) { return -1; }
   virtual int   lseek(off_t, int) { return -1; }
+  virtual fs::Dirent get_dirent() { return fs::Dirent(0); }
 
   id_t get_id() const noexcept { return id_; }
 

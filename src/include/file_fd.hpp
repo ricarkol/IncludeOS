@@ -32,6 +32,7 @@ public:
   int write(const void*, size_t) override;
   int close() override;
   int lseek(off_t, int) override;
+  fs::Dirent get_dirent() override { return ent_; }
 
   bool is_file() override { return true; }
 

@@ -168,9 +168,11 @@ void *aligned_alloc(size_t alignment, size_t size)
 
 int access(const char *pathname, int mode)
 {
-	(void) pathname;
-  (void) mode;
-
+  // Just an approximation
+  int fd = open(pathname, mode);
+  if (fd == -1)
+    return -1;
+  close(fd);
   return 0;
 }
 

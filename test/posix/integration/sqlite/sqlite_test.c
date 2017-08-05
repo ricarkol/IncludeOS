@@ -22,9 +22,9 @@
 #include <sys/types.h>
 
 int fdatasync(int name) {
-  printf("fdatasync(%d) called, not supported\n", name);
-  errno = ENOTSUP;
-  return -1;
+  //printf("fdatasync(%d) called, not supported\n", name);
+  //errno = ENOTSUP;
+  return 0;
 }
 
 
@@ -75,19 +75,22 @@ int main()
 {
   //
   sqlite3* db;
-  int rc = sqlite3_open(":memory:", &db);
-  printf("sqlite opened: %d\n", rc);
+
+  //int rc = sqlite3_open(":memory:", &db);
+  assert(sqlite3_vfs_register(sqlite3_vfs_find("unix-none"), 1) == 0);
+  int rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READONLY, "unix-none");
+  //int rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READWRITE, "unix-none");
   assert(rc == 0);
 
-  /* Create SQL statement */
+/*
   rc = sqlite_exec(db,
-      "CREATE TABLE company("
+      "CREATE TABLE company3("
       "id INT PRIMARY KEY     NOT NULL,"
       "name           TEXT    NOT NULL,"
       "age            INT     NOT NULL,"
       "address        CHAR(50),"
       "salary         REAL );");
-  
+*/
   if (rc == 0)
   {
     for (int i = 0; i < 10000; i++)
@@ -95,6 +98,8 @@ int main()
       static int next_id = 0;
       next_id++;
       char buffer[1024];
+
+/*
       snprintf(buffer, sizeof(buffer),
           "INSERT INTO company("
           "id, name, age, address, salary)"
@@ -103,6 +108,7 @@ int main()
           next_id);
       rc = sqlite_exec(db, buffer);
       assert(rc == 0);
+*/
     }
     
     rc = sqlite_exec(db,
