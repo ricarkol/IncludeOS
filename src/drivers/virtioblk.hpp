@@ -62,6 +62,10 @@ public:
     return buffer_t();
   }
 
+  int write_sync(block_t, size_t, char *buf) override {
+    return 0; // nothing was written
+  }
+
   block_t size() const noexcept override {
     return config.capacity;
   }

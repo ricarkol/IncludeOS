@@ -143,6 +143,8 @@ public:
    */
   virtual buffer_t read_sync(block_t blk, size_t count) = 0;
 
+  virtual int write_sync(block_t, size_t, char *buf) = 0;
+
   /**
    * Method to deactivate the block device
    */

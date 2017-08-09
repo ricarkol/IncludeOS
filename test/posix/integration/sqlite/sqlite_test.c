@@ -75,31 +75,32 @@ int main()
 {
   //
   sqlite3* db;
+  char buffer[1024];
+  int rc;
 
   //int rc = sqlite3_open(":memory:", &db);
-  assert(sqlite3_vfs_register(sqlite3_vfs_find("unix-none"), 1) == 0);
-  int rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READONLY, "unix-none");
-  //int rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READWRITE, "unix-none");
+  rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READWRITE, "unix-none");
   assert(rc == 0);
 
-/*
+  rc = sqlite_exec(db, "PRAGMA journal_mode=OFF;");
+  assert(rc == 0);
+
   rc = sqlite_exec(db,
-      "CREATE TABLE company3("
+      "CREATE TABLE company("
       "id INT PRIMARY KEY     NOT NULL,"
       "name           TEXT    NOT NULL,"
       "age            INT     NOT NULL,"
       "address        CHAR(50),"
       "salary         REAL );");
-*/
-  if (rc == 0)
-  {
+  assert(rc == 0);
+  if (rc == 0) {
+
     for (int i = 0; i < 10000; i++)
     {
       static int next_id = 0;
       next_id++;
       char buffer[1024];
 
-/*
       snprintf(buffer, sizeof(buffer),
           "INSERT INTO company("
           "id, name, age, address, salary)"
@@ -108,7 +109,6 @@ int main()
           next_id);
       rc = sqlite_exec(db, buffer);
       assert(rc == 0);
-*/
     }
     
     rc = sqlite_exec(db,

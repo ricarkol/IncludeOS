@@ -50,6 +50,9 @@ namespace fs
     void   read(const Dirent&, uint64_t pos, uint64_t n, on_read_func) override;
     Buffer read(const Dirent&, uint64_t pos, uint64_t n) override;
 
+    /** Write @n bytes to file pointed by @entry starting at position @pos */
+    int write(const Dirent&, uint64_t pos, uint64_t n, char *buf) override;
+
     // return information about a filesystem entity
     void   stat(Path_ptr, on_stat_func, const Dirent* const start) override;
     Dirent stat(Path ent, const Dirent* const start) override;

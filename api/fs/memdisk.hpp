@@ -52,6 +52,10 @@ namespace fs {
     virtual buffer_t read_sync(block_t blk) override;
     virtual buffer_t read_sync(block_t blk, size_t cnt) override;
 
+    int write_sync(block_t, size_t, char *buf) override {
+      return 0; // nothing was written
+    }
+
     explicit MemDisk() noexcept;
 
     void deactivate() override;

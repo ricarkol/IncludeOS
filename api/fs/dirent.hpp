@@ -118,6 +118,9 @@ namespace fs {
     /** Read sync **/
     inline Buffer read(uint64_t pos, uint64_t n);
 
+    /** Write sync **/
+    inline int write(uint64_t pos, uint64_t n, char *buf);
+
     /** Read the whole file, sync, to string **/
     inline std::string read();
 
@@ -171,6 +174,11 @@ namespace fs {
   /** Read sync **/
   Buffer Dirent::read(uint64_t pos, uint64_t n) {
     return fs_->read(*this, pos, n);
+  }
+
+  /** Write sync **/
+  int Dirent::write(uint64_t pos, uint64_t n, char *buf) {
+    return fs_->write(*this, pos, n, buf);
   }
 
   /** Read the whole file, sync, to string **/

@@ -41,6 +41,24 @@ namespace fs
     return Buffer(no_error, data, n);
   }
 
+  // This implementation doesn't allow write appends. In that case, n until
+  // the current size of the file will be returned.
+  int FAT::write(const Dirent& ent, uint64_t pos, uint64_t n, char *buf)
+  {
+    // bounds check the read position and length
+    uint32_t stapos = std::min(ent.size(), pos);
+    uint32_t endpos = std::min(ent.size(), pos + n);
+    // new length
+    n = endpos - stapos;
+    // cluster -> sector + position
+    uint32_t sector = stapos / this->sector_size;
+    uint32_t nsect = roundup(endpos, sector_size) / sector_size - sector;
+
+    // write @nsect sectors ahead
+    device.write_sync(this->cl_to_sector(ent.block()) + sector, nsect, buf);
+    return n;
+  }
+
   error_t FAT::int_ls(uint32_t sector, dirvector& ents)
   {
     bool done = false;

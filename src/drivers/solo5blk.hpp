@@ -63,6 +63,8 @@ public:
   buffer_t read_sync(block_t) override; // stays
   buffer_t read_sync(block_t, size_t) override; // stays
 
+  int write_sync(block_t, size_t, char *buf) override;
+
   virtual block_t size() const noexcept override;
 
   void deactivate() override; // stays

@@ -51,6 +51,9 @@ namespace fs {
     /** Read - sync */
     virtual Buffer read(const Dirent&, uint64_t pos, uint64_t n) = 0;
 
+    /** Write - sync */
+    virtual int write(const Dirent&, uint64_t pos, uint64_t n, char *buf) = 0;
+
     /** Return information about a file or directory - async */
     virtual void stat(Path_ptr, on_stat_func fn, const Dirent* const = nullptr) = 0;
 

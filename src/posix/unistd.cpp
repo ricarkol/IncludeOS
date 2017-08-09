@@ -92,7 +92,7 @@ int read(int fd, void* buf, size_t len)
 
 int write(int fd, const void* ptr, size_t len)
 {
-  if (fd < 4) {
+  if (fd < 3) {
     OS::print((const char*) ptr, len);
     return len;
   }

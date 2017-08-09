@@ -39,6 +39,12 @@ Solo5Blk::buffer_t Solo5Blk::read_sync(block_t blk, size_t count) {
   return buffer_t{buffer, std::default_delete<uint8_t[]>()};
 }
 
+int Solo5Blk::write_sync(block_t blk, size_t count, char *buf) {
+  int len = SECTOR_SIZE * count;
+  int rc = solo5_blk_write_sync((uint64_t) blk, (uint8_t *) buf, len);
+  return (rc == 0)? len : 0;
+}
+
 void Solo5Blk::deactivate()
 {
   INFO("Solo5Net", "deactivate");

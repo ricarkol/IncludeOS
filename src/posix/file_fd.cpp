@@ -25,8 +25,8 @@ int File_FD::read(void* p, size_t n) {
   return buf.size();
 }
 
-int File_FD::write(const void*, size_t) {
-  return -1;
+int File_FD::write(const void* buf, size_t n) {
+  return ent_.write(offset_, n, (char *) buf);
 }
 
 int File_FD::close() {
