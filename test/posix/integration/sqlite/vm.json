@@ -1,3 +1,11 @@
 {
-  "image" : "test_pthread.img"
+  "image" : "test_sqlite.img",
+  "drives"  : [{
+    "file" : "../my.disk",
+    "type" : "virtio",
+    "format" : "raw",
+    "media" : "disk"
+  }],
+  "intrusive" : "True",
+  "mem" : 1024
 }

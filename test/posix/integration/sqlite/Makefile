@@ -1,5 +1,5 @@
-unix: sqlite_test.c sqlite3.c
-	 gcc sqlite_test.c sqlite3.c -ldl -o sqlite_test
+unix: tcph.c sqlite3.c
+	 gcc tcph.c sqlite3.c -ldl -o tcph
 
 clean:
-	rm -f sqlite_test
+	rm -f tcph

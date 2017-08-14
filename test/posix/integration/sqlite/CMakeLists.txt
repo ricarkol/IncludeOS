@@ -21,7 +21,8 @@ set(MAX_MEM 128)
 # Source files to be linked with OS library parts to form bootable image
 set(SOURCES
     service.cpp
-    sqlite_test.c
+    #sqlite_test.c
+    tcph.c
     sqlite3.c
     )
 
