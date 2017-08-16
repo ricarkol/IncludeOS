@@ -242,6 +242,7 @@ class qemu(hypervisor):
                 "-netdev", netdev]
 
     def kvm_present(self):
+        return False;
         command = "egrep -m 1 '^flags.*(vmx|svm)' /proc/cpuinfo"
         try:
             subprocess.check_output(command, shell = True)
@@ -375,11 +376,13 @@ class qemu(hypervisor):
             vga_arg = ["-vga", str(self._config["vga"])]
 
         # TODO: sudo is only required for tap networking and kvm. Check for those.
-        command = ["sudo", "qemu-system-x86_64"]
-        if self._kvm_present: command.extend(["--enable-kvm", "-cpu", "host"])
+        #command = ["sudo", "qemu-system-x86_64"]
+        command = ["sudo", "/root/qemu/build/x86_64-softmmu/qemu-system-x86_64"]
+        if self._kvm_present: command.extend(["--enable-kvm", "-cpu", "Westmere"])
 
         command += kernel_args
 
+        #command += ["-icount","shift=7,rr=record,rrfile=replay.bin"]
         command += disk_args + net_args + mem_arg + vga_arg + mod_args
 
         #command_str = " ".join(command)
