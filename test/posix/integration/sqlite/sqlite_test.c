@@ -78,8 +78,8 @@ int main()
   char buffer[1024];
   int rc;
 
-  //int rc = sqlite3_open(":memory:", &db);
-  rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READWRITE, "unix-none");
+  rc = sqlite3_open(":memory:", &db);
+  //rc = sqlite3_open_v2("/db/company/my.db", &db, SQLITE_OPEN_READWRITE, "unix-none");
   assert(rc == 0);
 
   rc = sqlite_exec(db, "PRAGMA journal_mode=OFF;");
@@ -95,7 +95,7 @@ int main()
   assert(rc == 0);
   if (rc == 0) {
 
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 100000; i++)
     {
       static int next_id = 0;
       next_id++;
@@ -116,7 +116,6 @@ int main()
   }
 
   rc = sqlite3_close(db);
-  printf("sqlite closed: %d\n", rc);
 
   return 0;
 }
