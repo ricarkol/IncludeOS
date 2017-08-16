@@ -47,9 +47,14 @@ void Service::start(const std::string&)
 
     auto dir1 = disk->fs().stat("/db");
     fs::mount("/db", dir1, "db");
+
+    auto t1 = RTC::now();
     main();
+    auto t2 = RTC::now();
+    std::cout << t2 - t1 << "seconds";
+    extern void __arch_poweroff();
+    __arch_poweroff();
   });
 
   OS::shutdown();
 }
-
