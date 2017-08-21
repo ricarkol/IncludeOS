@@ -19,7 +19,6 @@
 #include <cstdio>
 #include <smp>
 
-/*
 #include <fiber>
 #include <unordered_map>
 std::unordered_map<pthread_t, Fiber> fibers;
@@ -41,7 +40,6 @@ int pthread_join(pthread_t thread, void **value_ptr) {
   *value_ptr = retval;
   return 0;
 }
-*/
 
 int sched_yield()
 {
@@ -53,6 +51,7 @@ pthread_t pthread_self()
 {
   return tself;
 }
+/*
 int pthread_create(pthread_t* th, const pthread_attr_t *, void *(*)(void *), void *)
 {
   printf("pthread_create: %p\n", th);
@@ -63,6 +62,7 @@ int pthread_join(pthread_t th, void **)
   printf("pthread_join %d\n", th);
   return 0;
 }
+*/
 int pthread_detach(pthread_t th)
 {
   printf("pthread_detach %d\n", th);
