@@ -36,7 +36,7 @@ void RTC::init()
 timestamp_t RTC::now()
 {
   auto ticks = OS::cycles_since_boot() - current_ticks;
-  auto diff  = ticks / Hz(MHz(OS::cpu_freq())).count();
+  auto diff  = ticks / KHz(MHz(OS::cpu_freq())).count();
 
   return current_time + diff;
 }
