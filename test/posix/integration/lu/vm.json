@@ -1,0 +1,4 @@
+{
+  "image" : "test_pthread.img",
+  "mem": 1024
+}
