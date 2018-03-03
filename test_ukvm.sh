@@ -14,7 +14,7 @@ pushd examples/demo_service
 mkdir -p build
 pushd build
 PLATFORM=x86_solo5 cmake ..
-make
+make service
 popd
 popd
 

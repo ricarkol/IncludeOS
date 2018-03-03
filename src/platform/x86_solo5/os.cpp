@@ -81,7 +81,8 @@ void OS::start(char* _cmdline, uintptr_t mem_size)
 
   /// STATMAN ///
   /// initialize on page 7, 2 pages in size
-  Statman::get().init(0x6000, 0x3000);
+  // XXX are we really really sure 0x11000 is not used by anybody?
+  Statman::get().init(0x11000, 0x3000);
 
   OS::cmdline = _cmdline;
 

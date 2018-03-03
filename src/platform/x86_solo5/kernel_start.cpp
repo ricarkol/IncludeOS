@@ -69,10 +69,15 @@ extern "C" {
 
      // solo5 sets the stack to be at the end of memory, so let's use that as
      // our memory size (before we change).
-     mem_size = (uintptr_t)get_cpu_ebp();
+     //mem_size = (uintptr_t)get_cpu_ebp();
+     // XXX hardcoded!!!
+     mem_size = 0x20000000;
 
      // set the stack location to its new includeos location, and call kernel_start
-     set_stack();
+     // stack is at 0xa0000 which is invalid for us.
+     // XXX for linux-seccomp, we can just use the regular stack
+     //set_stack();
+     kernel_start();
      return 0;
   }
 }
