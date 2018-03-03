@@ -71,7 +71,7 @@ extern "C" {
      // our memory size (before we change).
      //mem_size = (uintptr_t)get_cpu_ebp();
      // XXX hardcoded!!!
-     mem_size = 0x20000000;
+     mem_size = 0x40000000;
 
      // set the stack location to its new includeos location, and call kernel_start
      // stack is at 0xa0000 which is invalid for us.

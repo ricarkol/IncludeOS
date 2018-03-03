@@ -35,8 +35,6 @@ uint64_t  ts = 0;
 
 struct activity {
   void reset() {
-    total  = StackSampler::samples_total();
-    asleep = StackSampler::samples_asleep();
   }
   void print(activity& other) {
     auto tdiff = total - other.total;
@@ -73,7 +71,6 @@ void stop_measure()
   auto diff   = OS::nanos_since_boot() - ts;
   activity_after.reset();
 
-  StackSampler::print(15);
   activity_after.print(activity_before);
 
   packets_rx  = Statman::get().get_by_name("eth0.ethernet.packets_rx").get_uint64() - packets_rx;
@@ -89,8 +86,6 @@ void Service::start() {}
 
 void Service::ready()
 {
-  StackSampler::begin();
-  StackSampler::set_mode(StackSampler::MODE_DUMMY);
 
   static auto blob = net::tcp::construct_buffer(SIZE);
 
