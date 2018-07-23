@@ -14,6 +14,7 @@ void __arch_subscribe_irq(unsigned char) {} // for now
 
 char cmdline[256];
 uintptr_t mem_size;
+uintptr_t free_mem_begin;
 
 extern "C" {
   void __init_sanity_checks();
@@ -32,9 +33,6 @@ extern "C" {
 
     // generate checksums of read-only areas etc.
     __init_sanity_checks();
-
-    // Determine where free memory starts
-    uintptr_t free_mem_begin = reinterpret_cast<uintptr_t>(&_end);
 
     // Preserve symbols from the ELF binary
     free_mem_begin += _move_symbols(free_mem_begin);
@@ -62,14 +60,13 @@ extern "C" {
     OS::event_loop();
   }
 
-  int solo5_app_main(char *_cmdline)
+  int solo5_app_main(const struct solo5_start_info *si)
   {
      // cmdline is stored at 0x6000 by ukvm which is used by includeos. Move it fast.
-     strncpy(cmdline, _cmdline, 256);
+     strncpy(cmdline, si->cmdline, 256);
 
-     // solo5 sets the stack to be at the end of memory, so let's use that as
-     // our memory size (before we change).
-     mem_size = (uintptr_t)get_cpu_ebp();
+     free_mem_begin = si->heap_start;
+     mem_size = si->heap_size;
 
      // set the stack location to its new includeos location, and call kernel_start
      set_stack();
